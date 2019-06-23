@@ -5,6 +5,6 @@ namespace FlatOffersTracker.Parsing
 {
 	public interface IAdvertisementsCollector
 	{
-		IEnumerable<Advertisement> CollectAdvertisements();
+		IEnumerable<Advertisement> Collect();
 	}
 }

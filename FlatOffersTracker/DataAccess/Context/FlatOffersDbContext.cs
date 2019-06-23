@@ -33,6 +33,15 @@ namespace FlatOffersTracker.DataAccess.Context
 				.Entity<Link>());
 
 			builder
+				.Entity<Notification>()
+				.ToTable("Notificatins");
+			AddPrimaryKey(builder
+				.Entity<Notification>());
+			builder.Entity<Notification>()
+				.HasOne(x => x.FlatOffer)
+				.WithMany(x => x.Notifications);
+
+			builder
 				.Entity<ExecutionRecord>()
 				.ToTable("ExecutionHistory");
 			AddPrimaryKey(builder
