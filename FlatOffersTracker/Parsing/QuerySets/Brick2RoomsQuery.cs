@@ -7,6 +7,7 @@
 			FlatType = Entities.FlatType.Brick;
 			NumberOfRooms = 2;
 			PriceTopLimit = 3500000;
+			Location = "Brno";
 		}
 	}
 }

@@ -11,6 +11,7 @@ namespace FlatOffersTracker.Parsing.QuerySets
 			FlatType = Entities.FlatType.Panel;
 			NumberOfRooms = 3;
 			PriceTopLimit = 4500000;
+			Location = "Brno";
 		}
 	}
 }
