@@ -6,6 +6,7 @@ using System.Reflection;
 using FlatOffersTracker.Entities;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 
 namespace FlatOffersTracker.Parsing.Collectors
 {
@@ -26,17 +27,14 @@ namespace FlatOffersTracker.Parsing.Collectors
 
 			var url = _queryBuilder.GetQueryString(query);
 
-			var chromeOptions = new ChromeOptions();
-			chromeOptions.AddArguments("headless");
-			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-			using (var browser = new ChromeDriver(path, chromeOptions))
+			using (var browser = SetupDriver())
 			{
-				browser.Navigate().GoToUrl(url);
-				Console.WriteLine(browser.PageSource);
+				browser
+					.Navigate()
+					.GoToUrl(url);
 
 				SetMaxNumberOfAdvertisementsPerSinglePage(browser);
-
-				var elements = browser.FindElements(By.CssSelector(".property.ng-scope"));
+				var elements = GetIndividualAdvertisements(browser);
 
 				advertisements = elements.Select(el => new Advertisement
 				{
@@ -52,10 +50,37 @@ namespace FlatOffersTracker.Parsing.Collectors
 			return advertisements;
 		}
 
+		private static System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetIndividualAdvertisements(ChromeDriver browser)
+		{
+			var wait = new DefaultWait<IWebDriver>(browser);
+			wait.Timeout = TimeSpan.FromMilliseconds(10000);
+			wait.PollingInterval = TimeSpan.FromMilliseconds(200);
+			wait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+			wait.Until(x => { return x.FindElement(By.CssSelector(".property.ng-scope")); });
+
+			return browser.FindElements(By.CssSelector(".property.ng-scope"));
+		}
+
+		private ChromeDriver SetupDriver()
+		{
+			var chromeOptions = new ChromeOptions();
+			chromeOptions.AddArguments("headless");
+			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+			return new ChromeDriver(path, chromeOptions);
+		}
+
 		private static void SetMaxNumberOfAdvertisementsPerSinglePage(ChromeDriver browser)
 		{
-			var resultsPerPageButtons = browser.FindElement(By.CssSelector("options")).FindElements(By.TagName("button"));
-			resultsPerPageButtons.Last().Click();
+			browser
+				.FindElement(By.CssSelector(".per-page"))
+				.FindElement(By.CssSelector(".selected"))
+				.Click();
+			browser
+				.FindElement(By.CssSelector("options"))
+				.FindElements(By.TagName("button"))
+				.Last()
+				.Click();
 		}
 
 		private int ExtractFlatSize(string name)
