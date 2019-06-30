@@ -1,11 +1,12 @@
-﻿using FlatOffersTracker.DataAccess.Repositories;
+﻿using FlatOffersTracker.Cqrs;
+using FlatOffersTracker.DataAccess.Repositories;
 using FlatOffersTracker.Entities;
 using System;
 using System.Collections.Generic;
 
 namespace FlatOffersTracker
 {
-	public class TractOffersCommandHandler
+	public class TractOffersCommandHandler : ICommandHandler
 	{
 		private IExecutionHistoryRepository _executionHistoryRepository;
 
