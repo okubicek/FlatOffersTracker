@@ -1,5 +1,5 @@
 ﻿using FlatOffersTracker.Cqrs;
-using FlatOffersTracker.DataAccess.Repositories;
+using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Entities;
 using System;
 using System.Collections.Generic;

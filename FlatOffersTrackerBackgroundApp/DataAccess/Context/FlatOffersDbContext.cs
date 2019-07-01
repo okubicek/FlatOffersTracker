@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FlatOffersTracker.DataAccess.Context
+namespace FlatOffersTrackerBackgroundApp.DataAccess.Context
 {
 	public class FlatOffersDbContext : DbContext
 	{
@@ -34,7 +34,7 @@ namespace FlatOffersTracker.DataAccess.Context
 
 			builder
 				.Entity<Notification>()
-				.ToTable("Notificatins");
+				.ToTable("Notifications");
 			AddPrimaryKey(builder
 				.Entity<Notification>());
 			builder.Entity<Notification>()

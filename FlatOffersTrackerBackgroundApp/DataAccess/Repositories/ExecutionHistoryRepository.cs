@@ -1,17 +1,10 @@
-﻿using FlatOffersTracker.DataAccess.Context;
+﻿using FlatOffersTrackerBackgroundApp.DataAccess.Context;
 using FlatOffersTracker.Entities;
 using System.Linq;
+using FlatOffersTracker.DataAccess;
 
-namespace FlatOffersTracker.DataAccess.Repositories
+namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 {
-	public interface IExecutionHistoryRepository
-	{
-		ExecutionRecord GetLatestExecutionRecord();
-
-		void Save(ExecutionRecord record);
-	}
-
-
 	public class ExecutionHistoryRepository : IExecutionHistoryRepository
 	{
 		private FlatOffersDbContext _dbContext;

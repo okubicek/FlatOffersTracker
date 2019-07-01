@@ -1,16 +1,11 @@
-﻿using FlatOffersTracker.DataAccess.Context;
+﻿using FlatOffersTrackerBackgroundApp.DataAccess.Context;
 using FlatOffersTracker.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using FlatOffersTracker.DataAccess;
 
-namespace FlatOffersTracker.DataAccess.Repositories
+namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 {
-	public interface IFlatOffersRepository
-	{
-		IEnumerable<FlatOffer> GetOpenFlatOffers();
-
-		void Save(IEnumerable<FlatOffer> offers);
-	}
 
 	public class FlatOffersRepository : IFlatOffersRepository
 	{
