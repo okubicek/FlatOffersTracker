@@ -26,7 +26,7 @@ namespace FlatOffersTrackerBackgroundApp
 			await host.RunAsync();
 		}
 
-		public static IHostBuilder CreateWebHostBuilder(string[] args)
+		public static IHostBuilder CreateWebHostBuilder(string[] args) // calling this WebHostBuilder so entity framework is able to create migraitons
 		{
 			var builder = new HostBuilder()
 				.UseServiceProviderFactory(new WindsorServiceProviderFactory())

@@ -24,7 +24,20 @@ namespace FlatOffersTracker.Entities
 
 		public List<Notification> Notifications { get; set; }
 
-		public bool TryMatchAdvertisement(Advertisement ad)
+		public bool Removed { get; set; }
+
+		public void AddNotification(NotificationType notificationType)
+		{
+			Notifications.Add(new Notification(this, notificationType));
+		}
+
+		public void MarkAsRemoved()
+		{
+			Removed = true;
+			AddNotification(NotificationType.OfferRemoved);
+		}
+
+		public bool MatchAdvertisement(Advertisement ad)
 		{
 			if (MatchOnUrl(ad))
 			{
@@ -67,6 +80,5 @@ namespace FlatOffersTracker.Entities
 		{
 			return Links.Any(lnk => lnk.Url.Equals(ad.Url, StringComparison.CurrentCultureIgnoreCase));
 		}
-
 	}
 }

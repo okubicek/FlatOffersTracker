@@ -1,8 +1,12 @@
 ﻿using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using FlatOffersTracker;
 using FlatOffersTracker.Cqrs;
+using FlatOffersTracker.DataAccess;
+using FlatOffersTracker.Parsing;
+using FlatOffersTrackerBackgroundApp.DataAccess.Repositories;
 
 namespace FlatOffersTrackerBackgroundApp.Bootstrap
 {
@@ -10,17 +14,34 @@ namespace FlatOffersTrackerBackgroundApp.Bootstrap
 	{
 		public void Install(IWindsorContainer container, IConfigurationStore store)
 		{
+			container.Kernel.Resolver.AddSubResolver(new CollectionResolver(container.Kernel, false));
+
 			container.Register(Component
-				.For<ICommandHandler>()
+				.For<ICommand>()
 				.ImplementedBy<TractOffersCommandHandler>()
 				.LifestyleTransient());
 
 			container.Register(Classes
 				.FromAssemblyContaining<TractOffersCommandHandler>()
-				.BasedOn(typeof(ICommandHandler<,>))
+				.BasedOn(typeof(ICommand<,>))
 				.WithService
 				.Base()
 				.LifestyleTransient());
+
+			container.Register(Component
+				.For<IFlatOffersRepository>()
+				.ImplementedBy<FlatOffersRepository>()
+				.LifestyleTransient());
+
+			container.Register(Component
+				.For<IExecutionHistoryRepository>()
+				.ImplementedBy<ExecutionHistoryRepository>()
+				.LifestyleTransient());
+
+			container.Register(Classes
+				.FromAssemblyContaining<TractOffersCommandHandler>()
+				.BasedOn<IAdvertisementsCollector>()
+				.WithService.FromInterface());
 		}
 	}
 }

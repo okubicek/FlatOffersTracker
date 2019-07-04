@@ -10,9 +10,9 @@ namespace FlatOffersTrackerBackgroundApp.Jobs
 
 	public class AdvertisementTrackingJob : IAdvertisementTrackingJob
 	{
-		private ICommandHandler _tracker;
+		private ICommand _tracker;
 
-		public AdvertisementTrackingJob(ICommandHandler tracker)
+		public AdvertisementTrackingJob(ICommand tracker)
 		{
 			_tracker = tracker;
 		}

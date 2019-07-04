@@ -4,12 +4,12 @@ using System.Text;
 
 namespace FlatOffersTracker.Cqrs
 {
-	public interface ICommandHandler
+	public interface ICommand
 	{
 		void Execute();
 	}
 
-	public interface ICommandHandler<TReturn, TParam>
+	public interface ICommand<TReturn, TParam>
 	{
 		TReturn Execute(TParam command);
 	}

@@ -1,4 +1,5 @@
-﻿using FlatOffersTracker.Entities;
+﻿using FlatOffersTracker.Cqrs;
+using FlatOffersTracker.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,17 +7,48 @@ using System.Linq;
 namespace FlatOffersTracker
 {
 	public class UpdateOffersBasedOnAdvertisementsCommandHandler
+		: ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand>
 	{
-		public IEnumerable<FlatOffer> Execute(IEnumerable<FlatOffer> offers, IEnumerable<Advertisement> advertisements)
+		public IEnumerable<FlatOffer> Execute(UpdateOffersBasedOnAdvertisementsCommand command)
 		{
-			var matchedAdvertisements = new List<Advertisement>();
-			var offersWithMatchingAdvertisement = new HashSet<FlatOffer>();
+			MatchAdvertisementsToOffers(command.Offers,
+				command.Advertisements,
+				out var matchedAdvertisements,
+				out var offersWithMatchingAdvertisement);
+
+			var closedOffers = CloseUnmatchedOffers(command.Offers, offersWithMatchingAdvertisement);
+
+			var unmatchedAdvertisements = command.Advertisements.Except(matchedAdvertisements);
+			GenerateOffersForUnmatchedAdvertisements(offersWithMatchingAdvertisement, unmatchedAdvertisements);
+
+			var result = ConcatenateOffers(offersWithMatchingAdvertisement, closedOffers);
+			return result;
+		}
+
+		private static IEnumerable<FlatOffer> CloseUnmatchedOffers(IEnumerable<FlatOffer> offers, HashSet<FlatOffer> offersWithMatchingAdvertisement)
+		{
+			var closedOffers = offers.Except(offersWithMatchingAdvertisement);
+			foreach (var closedOffer in closedOffers)
+			{
+				closedOffer.MarkAsRemoved();
+			}
+
+			return closedOffers;
+		}
+
+		private static void MatchAdvertisementsToOffers(IEnumerable<FlatOffer> offers,
+			IEnumerable<Advertisement> advertisements,
+			out List<Advertisement> matchedAdvertisements,
+			out HashSet<FlatOffer> offersWithMatchingAdvertisement)
+		{
+			matchedAdvertisements = new List<Advertisement>();
+			offersWithMatchingAdvertisement = new HashSet<FlatOffer>();
 
 			foreach (var offer in offers)
 			{
 				foreach (var ad in advertisements)
 				{
-					var matched = offer.TryMatchAdvertisement(ad);
+					var matched = offer.MatchAdvertisement(ad);
 					if (matched)
 					{
 						matchedAdvertisements.Add(ad);
@@ -24,16 +56,9 @@ namespace FlatOffersTracker
 					}
 				}
 			}
-
-			var closedOffers = offers.Except(offersWithMatchingAdvertisement);
-			var unmatchedAdvertisements = advertisements.Except(matchedAdvertisements);
-
-			ProcessUnmatchedAdvertisements(offersWithMatchingAdvertisement, unmatchedAdvertisements);
-
-			return CombineOffers(offersWithMatchingAdvertisement, closedOffers);
 		}
 
-		private static void ProcessUnmatchedAdvertisements(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<Advertisement> unmatchedAdvertisements)
+		private static void GenerateOffersForUnmatchedAdvertisements(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<Advertisement> unmatchedAdvertisements)
 		{
 			foreach (var ad in unmatchedAdvertisements)
 			{
@@ -46,6 +71,8 @@ namespace FlatOffersTracker
 					Address = ad.Address,
 					Price = ad.Price
 				};
+
+				offer.AddNotification(NotificationType.OfferAdded);
 
 				if (offersWithMatchingAdvertisement.TryGetValue(offer, out var offerToUpdate))
 				{
@@ -60,7 +87,7 @@ namespace FlatOffersTracker
 			}
 		}
 
-		private static IEnumerable<FlatOffer> CombineOffers(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<FlatOffer> closedOffers)
+		private static IEnumerable<FlatOffer> ConcatenateOffers(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<FlatOffer> closedOffers)
 		{
 			var offers = offersWithMatchingAdvertisement.ToList();
 			offers.AddRange(closedOffers);
