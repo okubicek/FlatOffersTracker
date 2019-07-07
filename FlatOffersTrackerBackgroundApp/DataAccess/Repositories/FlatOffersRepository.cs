@@ -26,7 +26,7 @@ namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 
 		public void Save(IEnumerable<FlatOffer> offers)
 		{
-			_dbContext.FlatOffers.AddRange(offers);
+			_dbContext.FlatOffers.UpdateRange(offers);
 			_dbContext.SaveChanges();
 		}
 	}
