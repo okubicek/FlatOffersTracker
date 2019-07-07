@@ -28,12 +28,29 @@ namespace FlatOffersTracker.Entities
 
 		public void AddNotification(NotificationType notificationType)
 		{
+			if (Notifications == null)
+			{
+				Notifications = new List<Notification>();
+			}
+
 			Notifications.Add(new Notification(this, notificationType));
+		}
+
+		public void AddLink(string AdvertisementUrl)
+		{
+			if (Links == null)
+			{
+				Links = new List<Link>();
+			}
+
+			Links.Add(new Link(AdvertisementUrl, this));
 		}
 
 		public void MarkAsRemoved()
 		{
 			Removed = true;
+			DateRemoved = DateTime.Now;
+
 			AddNotification(NotificationType.OfferRemoved);
 		}
 
@@ -46,7 +63,7 @@ namespace FlatOffersTracker.Entities
 
 			if (MatchOnFlatParams(ad))
 			{
-				Links.Add(new Link(ad.Url, this));
+				AddLink(ad.Url);
 				return true;
 			}
 

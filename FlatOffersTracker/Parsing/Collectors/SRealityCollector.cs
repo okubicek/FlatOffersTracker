@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using FlatOffersTracker.Entities;
+using FlatOffersTracker.Parsing.QuerySets;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -14,11 +15,23 @@ namespace FlatOffersTracker.Parsing.Collectors
 	{
 		private IQueryBuilder _queryBuilder = new SrealityQueryStringBuilder();
 
-		private IEnumerable<Query> _queries = new List<Query> { };
+		private IEnumerable<Query> _queries = new List<Query> {
+			new Brick2RoomsQuery(),
+			new Brick3RoomsQuery(),
+			new Panel3RoomsQuery()
+		};
 
 		public IEnumerable<Advertisement> Collect()
 		{
-			throw new NotImplementedException();
+			var advertisements = new List<Advertisement>();
+
+			foreach(var query in _queries)
+			{
+				var collected = CollectAdvertisements(query);
+				advertisements.AddRange(collected);
+			}
+
+			return advertisements;
 		}
 
 		private IEnumerable<Advertisement> CollectAdvertisements(Query query)
@@ -44,7 +57,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 					Address = el.FindElement(By.CssSelector(".locality")).GetAttribute("innerHTML"),
 					Price = ExtractPrice(el.FindElement(By.CssSelector(".norm-price")).GetAttribute("innerHTML")),
 					FlatSize = ExtractFlatSize(elements[0].FindElement(By.CssSelector(".name")).GetAttribute("innerHTML"))
-				});
+				}).ToList();
 			}
 
 			return advertisements;
@@ -77,7 +90,8 @@ namespace FlatOffersTracker.Parsing.Collectors
 				.FindElement(By.CssSelector(".selected"))
 				.Click();
 			browser
-				.FindElement(By.CssSelector("options"))
+				.FindElement(By.CssSelector(".per-page"))
+				.FindElement(By.CssSelector(".options"))
 				.FindElements(By.TagName("button"))
 				.Last()
 				.Click();

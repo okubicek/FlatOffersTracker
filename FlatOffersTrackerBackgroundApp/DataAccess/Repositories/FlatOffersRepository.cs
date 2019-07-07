@@ -3,10 +3,10 @@ using FlatOffersTracker.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using FlatOffersTracker.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 {
-
 	public class FlatOffersRepository : IFlatOffersRepository
 	{
 		private FlatOffersDbContext _dbContext;
@@ -19,12 +19,14 @@ namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 		public IEnumerable<FlatOffer> GetOpenFlatOffers()
 		{
 			return _dbContext.FlatOffers
+				.Include(x => x.Links)
+				.Include(x => x.Notifications)
 				.Where(x => x.DateRemoved == null);
 		}
 
 		public void Save(IEnumerable<FlatOffer> offers)
 		{
-			_dbContext.Add(offers);
+			_dbContext.FlatOffers.AddRange(offers);
 			_dbContext.SaveChanges();
 		}
 	}

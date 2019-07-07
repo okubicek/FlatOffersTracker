@@ -7,13 +7,13 @@ namespace FlatOffersTracker.Parsing.Collectors
 {
 	public class SrealityQueryStringBuilder : IQueryBuilder
 	{
-		private string uri = "https://www.sreality.cz/hledani/prodej/byty/";
+		private string uri = "https://www.sreality.cz/hledani/prodej/byty";
 
 		public string GetQueryString(Query query)
 		{
-			var url = uri + $"/{query.Location}";
+			var url = uri + $"/{query.Location.ToLower()}";
 			var parameters = GetQueryParamsDictionary(query);
-			var queryString = QueryHelpers.AddQueryString(uri, parameters);
+			var queryString = QueryHelpers.AddQueryString(url, parameters);
 
 			return queryString;
 		}
@@ -30,6 +30,8 @@ namespace FlatOffersTracker.Parsing.Collectors
 				dict.Add("cena-do", query.PriceTopLimit.Value.ToString());
 			}
 
+			dict.Add("cena-od", "0");
+
 			return dict;
 		}
 
@@ -40,7 +42,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 				case FlatType.Brick:
 					return "cihlova";
 				case FlatType.Panel:
-					return "panel";
+					return "panelova";
 				default:
 					throw new NotImplementedException($"Flat type {flatType.ToString()} is not supported");
 			}

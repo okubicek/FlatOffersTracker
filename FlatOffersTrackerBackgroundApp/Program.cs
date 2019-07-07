@@ -21,9 +21,10 @@ namespace FlatOffersTrackerBackgroundApp
 	{
 		public static async Task Main(string[] args)
 		{
-			var host = CreateWebHostBuilder(args).Build();
+			var hostBuilder = CreateWebHostBuilder(args);
+			AddHangfire(hostBuilder);
 
-			await host.RunAsync();
+			await hostBuilder.Build().RunAsync();
 		}
 
 		public static IHostBuilder CreateWebHostBuilder(string[] args) // calling this WebHostBuilder so entity framework is able to create migraitons
@@ -53,23 +54,35 @@ namespace FlatOffersTrackerBackgroundApp
 				})
 				.ConfigureServices((hostContext, services) =>
 				{
-					var connectionString = hostContext.Configuration.GetConnectionString("DefaultConnection");
+					string connectionString = GetConnectionString(hostContext);
 					services.AddDbContext<FlatOffersDbContext>(options =>
 						options.UseSqlServer(connectionString)
 					);
+				});
 
-					services.AddHangfire((provider, configuration) => configuration
+			return builder;
+		}
+
+		private static void AddHangfire(IHostBuilder host)
+		{
+			host.ConfigureServices((hostContext, services) =>
+			{
+				string connectionString = GetConnectionString(hostContext);
+				services.AddHangfire((provider, configuration) => configuration
 							.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
 							.UseSimpleAssemblyNameTypeSerializer()
 							.UseSqlServerStorage(
 								connectionString,
 								provider.GetRequiredService<SqlServerStorageOptions>()));
 
-					services.AddHostedService<RecurringJobsService>();
-					services.AddHangfireServer();
-				});
+				services.AddHostedService<RegisterHangfireJobsService>();
+				services.AddHangfireServer();
+			});
+		}
 
-			return builder;
+		private static string GetConnectionString(HostBuilderContext hostContext)
+		{
+			return hostContext.Configuration.GetConnectionString("DefaultConnection");
 		}
 	}
 }

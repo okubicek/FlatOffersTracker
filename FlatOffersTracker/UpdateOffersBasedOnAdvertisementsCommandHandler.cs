@@ -72,18 +72,17 @@ namespace FlatOffersTracker
 					Price = ad.Price
 				};
 
-				offer.AddNotification(NotificationType.OfferAdded);
-
 				if (offersWithMatchingAdvertisement.TryGetValue(offer, out var offerToUpdate))
 				{
 					offer = offerToUpdate;
 				}
 				else
 				{
+					offer.AddNotification(NotificationType.OfferAdded);
 					offersWithMatchingAdvertisement.Add(offer);
 				}
 
-				offer.Links.Add(new Link(ad.Url, offer));
+				offer.AddLink(ad.Url);
 			}
 		}
 

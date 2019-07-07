@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FlatOffersTrackerBackgroundApp
 {
-	public class RecurringJobsService : BackgroundService
+	public class RegisterHangfireJobsService : BackgroundService
 	{
 		protected override Task ExecuteAsync(CancellationToken stoppingToken)
 		{

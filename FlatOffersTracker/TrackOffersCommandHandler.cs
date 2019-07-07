@@ -52,15 +52,15 @@ namespace FlatOffersTracker
 		private void UpdateFlattOffers()
 		{
 			var advertisements = GetAdvertisements();
-			var offers = _flatOffersRepository.GetOpenFlatOffers();
+			var existingOffers = _flatOffersRepository.GetOpenFlatOffers();
 
-			_updateOffers.Execute(new UpdateOffersBasedOnAdvertisementsCommand
+			var resultingOffers = _updateOffers.Execute(new UpdateOffersBasedOnAdvertisementsCommand
 			{
 				Advertisements = advertisements,
-				Offers = offers
+				Offers = existingOffers
 			});
 
-			_flatOffersRepository.Save(offers);
+			_flatOffersRepository.Save(resultingOffers);
 		}
 
 		private IEnumerable<Advertisement> GetAdvertisements()
@@ -79,7 +79,7 @@ namespace FlatOffersTracker
 			var lastExecution = _executionHistoryRepository.GetLatestExecutionRecord();
 
 			return lastExecution == null ?
-				true :
+				false :
 				HoursFromLastExecution(lastExecution) > 24;
 		}
 

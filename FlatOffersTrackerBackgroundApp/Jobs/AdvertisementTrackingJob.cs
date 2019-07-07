@@ -21,7 +21,7 @@ namespace FlatOffersTrackerBackgroundApp.Jobs
 		{
 			_tracker.Execute();
 
-			Console.Write($"Batch has been executed at {DateTime.Now}");
+			Console.Write($"Batch has been executed at { DateTime.Now }");
 		}
 	}
 }
