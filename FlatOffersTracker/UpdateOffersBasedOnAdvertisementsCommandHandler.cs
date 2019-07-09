@@ -19,7 +19,7 @@ namespace FlatOffersTracker
 			var closedOffers = CloseUnmatchedOffers(command.Offers, offersWithMatchingAdvertisement);
 
 			var unmatchedAdvertisements = command.Advertisements.Except(matchedAdvertisements);
-			GenerateOffersForUnmatchedAdvertisements(offersWithMatchingAdvertisement, unmatchedAdvertisements);
+			GenerateNewOffersForUnmatchedAdvertisements(offersWithMatchingAdvertisement, unmatchedAdvertisements);
 
 			var result = ConcatenateOffers(offersWithMatchingAdvertisement, closedOffers);
 			return result;
@@ -51,6 +51,11 @@ namespace FlatOffersTracker
 					var matched = offer.MatchAdvertisement(ad);
 					if (matched)
 					{
+						if(offer.Price != ad.Price)
+						{
+							offer.Price = ad.Price;
+							offer.AddNotification(NotificationType.PriceChanged);
+						}
 						matchedAdvertisements.Add(ad);
 						offersWithMatchingAdvertisement.AddIfNotExists(offer);
 					}
@@ -58,7 +63,7 @@ namespace FlatOffersTracker
 			}
 		}
 
-		private static void GenerateOffersForUnmatchedAdvertisements(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<Advertisement> unmatchedAdvertisements)
+		private static void GenerateNewOffersForUnmatchedAdvertisements(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<Advertisement> unmatchedAdvertisements)
 		{
 			foreach (var ad in unmatchedAdvertisements)
 			{
@@ -90,6 +95,7 @@ namespace FlatOffersTracker
 		{
 			var offers = offersWithMatchingAdvertisement.ToList();
 			offers.AddRange(closedOffers);
+
 			return offers;
 		}
 	}

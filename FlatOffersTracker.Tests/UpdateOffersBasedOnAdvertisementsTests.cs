@@ -49,7 +49,7 @@ namespace FlatOffersTracker.Tests
 			};
 		}
 
-		protected FlatOffer GenerateOfferFromAdvertisement(Advertisement ad)
+		protected FlatOffer GenerateOfferFromAdvertisement(Advertisement ad, decimal? priceOverride = null)
 		{
 			var offer = new FlatOffer
 			{
@@ -57,7 +57,7 @@ namespace FlatOffersTracker.Tests
 				FlatSize = ad.FlatSize,
 				FlatType = ad.FlatType,
 				NumberOfRooms = ad.NumberOfRooms,
-				Price = ad.Price
+				Price = priceOverride.HasValue ? priceOverride.Value : ad.Price
 			};
 
 			offer.AddLink(ad.Url);
@@ -179,4 +179,28 @@ namespace FlatOffersTracker.Tests
 			Assert.Contains(offer.Notifications, x => x.Type == NotificationType.OfferRemoved);
 		}
 	}
+
+	public class WhenAmendingPriceOnAdvertisement : UpdateOffersBasedOnAdvertisementsTestsBase
+	{
+		protected override IEnumerable<FlatOffer> FlatOffers => new List<FlatOffer>
+		{
+			GenerateOfferFromAdvertisement(FirstAdvertisement, FirstAdvertisement.Price + 1500)			
+		};
+
+		protected override IEnumerable<Advertisement> Advertisements => new List<Advertisement> { FirstAdvertisement };
+
+		[Fact]
+		public void PriceOnOfferShouldBeChanged()
+		{
+			Assert.Equal(Result.First().Price, FirstAdvertisement.Price);
+		}
+
+		[Fact]
+		public void PriceChangeNotificationShouldBeRaised()
+		{
+			var offer = Result.First();
+			Assert.Contains(offer.Notifications, x => x.Type == NotificationType.PriceChanged);
+		}
+	}
+
 }
