@@ -32,6 +32,7 @@ namespace FlatOffersTracker.Tests
 			{
 				Address = "Brno",
 				Url = "http:bleblablue.cz",
+				UniqueId = 123485,
 				FlatSize = 80,
 				FlatType = FlatType.Brick,
 				NumberOfRooms = 2,
@@ -41,6 +42,7 @@ namespace FlatOffersTracker.Tests
 			SecondAdvertisement = new Advertisement
 			{
 				Url = "http:bleblablue/Nadvori.cz",
+				UniqueId = 14894566,
 				Address = "Brno",
 				FlatSize = 75,
 				FlatType = FlatType.Panel,
@@ -60,7 +62,7 @@ namespace FlatOffersTracker.Tests
 				Price = priceOverride.HasValue ? priceOverride.Value : ad.Price
 			};
 
-			offer.AddLink(ad.Url);
+			offer.AddLink(ad.Url, ad.UniqueId);
 
 			return offer;
 		}
@@ -108,6 +110,7 @@ namespace FlatOffersTracker.Tests
 							x.FlatType == toCompare.FlatType &&
 							x.NumberOfRooms == toCompare.NumberOfRooms &&
 							x.Price == toCompare.Price &&
+							x.Links.Any(l => l.UniqueId == toCompare.UniqueId) &&
 							x.Links.Any(l => l.Url.Equals(toCompare.Url))
 						));
 		}

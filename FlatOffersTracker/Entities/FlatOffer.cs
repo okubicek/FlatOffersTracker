@@ -36,14 +36,14 @@ namespace FlatOffersTracker.Entities
 			Notifications.Add(new Notification(this, notificationType));
 		}
 
-		public void AddLink(string AdvertisementUrl)
+		public void AddLink(string AdvertisementUrl, int uniqueId)
 		{
 			if (Links == null)
 			{
 				Links = new List<Link>();
 			}
 
-			Links.Add(new Link(AdvertisementUrl, this));
+			Links.Add(new Link(AdvertisementUrl, uniqueId, this));
 		}
 
 		public void MarkAsRemoved()
@@ -56,14 +56,14 @@ namespace FlatOffersTracker.Entities
 
 		public bool MatchAdvertisement(Advertisement ad)
 		{
-			if (MatchOnUrl(ad))
+			if (MatchOnUniqueId(ad))
 			{
 				return true;
 			}
 
 			if (MatchOnFlatParams(ad))
 			{
-				AddLink(ad.Url);
+				AddLink(ad.Url, ad.UniqueId);
 				return true;
 			}
 
@@ -93,9 +93,9 @@ namespace FlatOffersTracker.Entities
 							Address.Equals(ad.Address);
 		}
 
-		private bool MatchOnUrl(Advertisement ad)
+		private bool MatchOnUniqueId(Advertisement ad)
 		{
-			return Links.Any(lnk => lnk.Url.Equals(ad.Url, StringComparison.CurrentCultureIgnoreCase));
+			return Links.Any(lnk => lnk.UniqueId ==  ad.UniqueId);
 		}
 	}
 }

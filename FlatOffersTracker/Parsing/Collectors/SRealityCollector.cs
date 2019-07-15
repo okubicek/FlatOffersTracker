@@ -56,7 +56,8 @@ namespace FlatOffersTracker.Parsing.Collectors
 					NumberOfRooms = query.NumberOfRooms,
 					Address = el.FindElement(By.CssSelector(".locality")).GetAttribute("innerHTML"),
 					Price = ExtractPrice(el.FindElement(By.CssSelector(".norm-price")).GetAttribute("innerHTML")),
-					FlatSize = ExtractFlatSize(el.FindElement(By.CssSelector(".name")).GetAttribute("innerHTML"))
+					FlatSize = ExtractFlatSize(el.FindElement(By.CssSelector(".name")).GetAttribute("innerHTML")),
+					UniqueId = ExtractUid(el.FindElement(By.CssSelector(".title")).GetAttribute("href"))
 				}).ToList();
 			}
 
@@ -121,6 +122,19 @@ namespace FlatOffersTracker.Parsing.Collectors
 			var extractedNumbers = string.Join(string.Empty, price.Where(x => Char.IsNumber(x)));
 
 			return decimal.Parse(extractedNumbers);
+		}
+
+		private int ExtractUid(string url)
+		{
+			var i = url.LastIndexOf('/');
+			var stringId = url.Substring(i + 1, (url.Length - i) - 1);
+
+			if (int.TryParse(stringId, out var id))
+			{
+				return id;
+			}
+
+			return HashCode.Combine(url);
 		}
 	}
 }

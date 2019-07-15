@@ -87,7 +87,7 @@ namespace FlatOffersTracker
 					offersWithMatchingAdvertisement.Add(offer);
 				}
 
-				offer.AddLink(ad.Url);
+				offer.AddLink(ad.Url, ad.UniqueId);
 			}
 		}
 
