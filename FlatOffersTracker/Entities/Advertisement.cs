@@ -4,7 +4,7 @@
 	{
 		public string Url { get; set; }
 
-		public int UniqueId { get; set; }
+		public long UniqueId { get; set; }
 
 		public string Address { get; set; }
 

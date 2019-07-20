@@ -6,7 +6,7 @@
 		{
 		}
 
-		public Link(string url, int uniqueId, FlatOffer offer)
+		public Link(string url, long uniqueId, FlatOffer offer)
 		{
 			FlatOffer = offer;
 			Url = url;
@@ -17,6 +17,6 @@
 
 		public string Url { get; set; }
 
-		public int UniqueId { get; set; }
+		public long UniqueId { get; set; }
 	}
 }

@@ -36,7 +36,7 @@ namespace FlatOffersTracker.Entities
 			Notifications.Add(new Notification(this, notificationType));
 		}
 
-		public void AddLink(string AdvertisementUrl, int uniqueId)
+		public void AddLink(string AdvertisementUrl, long uniqueId)
 		{
 			if (Links == null)
 			{
