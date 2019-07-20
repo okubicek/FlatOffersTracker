@@ -1,4 +1,5 @@
 ﻿using FlatOffersTracker.Cqrs;
+using Serilog;
 using System;
 
 namespace FlatOffersTrackerBackgroundApp.Jobs
@@ -12,16 +13,21 @@ namespace FlatOffersTrackerBackgroundApp.Jobs
 	{
 		private ICommand _tracker;
 
-		public AdvertisementTrackingJob(ICommand tracker)
+		private ILogger _logger;
+
+		public AdvertisementTrackingJob(ICommand tracker, ILogger logger)
 		{
 			_tracker = tracker;
+			_logger = logger;
 		}
 
 		public void Run()
 		{
+			_logger.Information("Batch started at {Now}", DateTime.Now);
+
 			_tracker.Execute();
 
-			Console.Write($"Batch has been executed at { DateTime.Now }");
+			_logger.Information("Batch execution finished at {Now}", DateTime.Now);
 		}
 	}
 }

@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Serilog;
+using Serilog.Events;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -21,8 +23,11 @@ namespace FlatOffersTrackerBackgroundApp
 	{
 		public static async Task Main(string[] args)
 		{
+			ConfigureLogger();
+
 			var hostBuilder = CreateWebHostBuilder(args);
 			AddHangfire(hostBuilder);
+			hostBuilder.UseSerilog();
 
 			await hostBuilder.Build().RunAsync();
 		}
@@ -48,7 +53,6 @@ namespace FlatOffersTrackerBackgroundApp
 				})
 				.ConfigureHostConfiguration(configuration => 
 				{
-
 					configuration.SetBasePath(Directory.GetCurrentDirectory());
 					configuration.AddJsonFile("appsettings.json", true);
 				})
@@ -58,6 +62,7 @@ namespace FlatOffersTrackerBackgroundApp
 					services.AddDbContext<FlatOffersDbContext>(options =>
 						options.UseSqlServer(connectionString)
 					);
+					services.AddSingleton(Log.Logger);
 				});
 
 			return builder;
@@ -83,6 +88,16 @@ namespace FlatOffersTrackerBackgroundApp
 		private static string GetConnectionString(HostBuilderContext hostContext)
 		{
 			return hostContext.Configuration.GetConnectionString("DefaultConnection");
+		}
+
+		private static void ConfigureLogger()
+		{
+			Log.Logger = new LoggerConfiguration()
+				.MinimumLevel.Information()
+				.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+				.Enrich.FromLogContext()
+				.WriteTo.RollingFile("Logs\\Log{Date}.txt", outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}] [{Level:u3}] {Message:lj}{NewLine}{Exception}")
+				.CreateLogger();
 		}
 	}
 }

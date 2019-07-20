@@ -2,6 +2,7 @@
 using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Entities;
 using FlatOffersTracker.Parsing;
+using Serilog;
 using System;
 using System.Collections.Generic;
 
@@ -17,15 +18,19 @@ namespace FlatOffersTracker
 
 		private IEnumerable<IAdvertisementsCollector> _advertisementsCollectors;
 
+		private ILogger _logger;
+
 		public TractOffersCommandHandler(IExecutionHistoryRepository executionHistoryRepository, 
 			IFlatOffersRepository flatOffersRepository,
 			ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand> updateOffers,
-			IEnumerable<IAdvertisementsCollector> advertisementsCollectors)
+			IEnumerable<IAdvertisementsCollector> advertisementsCollectors, 
+			ILogger logger)
 		{
 			_updateOffers = updateOffers;
 			_executionHistoryRepository = executionHistoryRepository;
 			_flatOffersRepository = flatOffersRepository;
 			_advertisementsCollectors = advertisementsCollectors;
+			_logger = logger;
 		}
 
 		public void Execute()
@@ -45,7 +50,9 @@ namespace FlatOffersTracker
 			}
 			catch(Exception ex)
 			{
+				_logger.Error(ex, "Offer tracking failed");
 				RecordExecutionFinished(started, false);
+				throw;
 			}
 		}
 
@@ -70,7 +77,7 @@ namespace FlatOffersTracker
 			{
 				advertisements.AddRange(collector.Collect());
 			}
-
+			
 			return advertisements;
 		}
 

@@ -8,11 +8,14 @@ using FlatOffersTracker.Parsing.QuerySets;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using Serilog;
 
 namespace FlatOffersTracker.Parsing.Collectors
 {
 	public class SRealityCollector : IAdvertisementsCollector
 	{
+		private ILogger _logger;
+
 		private IQueryBuilder _queryBuilder = new SrealityQueryStringBuilder();
 
 		private IEnumerable<Query> _queries = new List<Query> {
@@ -20,6 +23,11 @@ namespace FlatOffersTracker.Parsing.Collectors
 			new Brick3RoomsQuery(),
 			new Panel3RoomsQuery()
 		};
+
+		public SRealityCollector(ILogger logger)
+		{
+			_logger = logger;
+		}
 
 		public IEnumerable<Advertisement> Collect()
 		{
@@ -36,8 +44,6 @@ namespace FlatOffersTracker.Parsing.Collectors
 
 		private IEnumerable<Advertisement> CollectAdvertisements(Query query)
 		{
-			IEnumerable<Advertisement> advertisements;
-
 			var url = _queryBuilder.GetQueryString(query);
 
 			using (var browser = SetupDriver())
@@ -49,7 +55,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 				SetMaxNumberOfAdvertisementsPerSinglePage(browser);
 				var elements = GetIndividualAdvertisements(browser);
 
-				advertisements = elements.Select(el => new Advertisement
+				var advertisements = elements.Select(el => new Advertisement
 				{
 					Url = el.FindElement(By.CssSelector(".title")).GetAttribute("href"),
 					FlatType = query.FlatType,
@@ -59,9 +65,11 @@ namespace FlatOffersTracker.Parsing.Collectors
 					FlatSize = ExtractFlatSize(el.FindElement(By.CssSelector(".name")).GetAttribute("innerHTML")),
 					UniqueId = ExtractUid(el.FindElement(By.CssSelector(".title")).GetAttribute("href"))
 				}).ToList();
-			}
 
-			return advertisements;
+				_logger.Information("url {url} pulled {count} advertisements", url, advertisements.Count);
+
+				return advertisements;
+			}
 		}
 
 		private static System.Collections.ObjectModel.ReadOnlyCollection<IWebElement> GetIndividualAdvertisements(ChromeDriver browser)
