@@ -1,6 +1,6 @@
 ﻿using FlatOffersTracker.Entities;
 
-namespace FlatOffersTracker.DataAccess
+namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 {
 	public interface IExecutionHistoryRepository
 	{

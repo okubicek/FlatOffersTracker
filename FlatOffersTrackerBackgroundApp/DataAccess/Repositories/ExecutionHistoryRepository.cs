@@ -1,7 +1,6 @@
 ﻿using FlatOffersTrackerBackgroundApp.DataAccess.Context;
 using FlatOffersTracker.Entities;
 using System.Linq;
-using FlatOffersTracker.DataAccess;
 
 namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 {
