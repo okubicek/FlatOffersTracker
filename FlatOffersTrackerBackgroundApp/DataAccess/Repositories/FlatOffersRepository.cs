@@ -26,6 +26,9 @@ namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 
 		public void Save(IEnumerable<FlatOffer> offers)
 		{
+			_dbContext.FixStateOfEntitiesWithoutKey(offers.SelectMany(x => x.Notifications));
+			_dbContext.FixStateOfEntitiesWithoutKey(offers.SelectMany(x => x.Links));
+
 			_dbContext.FlatOffers.UpdateRange(offers);
 			_dbContext.SaveChanges();
 		}
