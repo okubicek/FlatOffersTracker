@@ -9,8 +9,8 @@ namespace FlatOffersTracker.IntegrationTests
 		public T CreateDbContext<T>(Func<DbContextOptions<T>, T> create) where T : DbContext
 		{			
 			var serviceProvider = new ServiceCollection()
-			.AddEntityFrameworkSqlServer()
-			.BuildServiceProvider();
+				.AddEntityFrameworkSqlServer()
+				.BuildServiceProvider();
 
 			var builder = new DbContextOptionsBuilder<T>();
 
