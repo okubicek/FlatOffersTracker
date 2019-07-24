@@ -1,8 +1,11 @@
 ﻿using FlatOffersTracker.Parsing;
 using FlatOffersTrackerBackgroundApp.DataAccess.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Respawn;
 using Serilog;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 {	
@@ -10,6 +13,10 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 	{
 		public RemoveAndAddFlatOfferTestFixture(FlatOffersDbContextFixture dbFixture)
 		{
+			var connectionString = dbFixture.Context.Database.GetDbConnection().ConnectionString;
+			var checkpoint = new Checkpoint();
+			Task.Run(() => checkpoint.Reset(connectionString)).Wait();
+
 			var Offer = FlatOfferFactory.GetFlatOfferType1();
 			var Ad2 = AdvertisementFactory.GetAdverstisementType1();
 
