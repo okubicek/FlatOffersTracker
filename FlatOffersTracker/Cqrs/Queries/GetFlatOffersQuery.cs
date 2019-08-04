@@ -1,5 +1,5 @@
-﻿using FlatOffersTracker.Entities;
-using FlatOffersTracker.Entities.ValueTypes;
+﻿using Common.ValueTypes;
+using FlatOffersTracker.Entities;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {

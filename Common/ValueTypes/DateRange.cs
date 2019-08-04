@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FlatOffersTracker.Entities.ValueTypes
+namespace Common.ValueTypes
 {
 	public struct DateRange
 	{
 		public DateRange(DateTime? startDate, DateTime? endDate) : this()
 		{
+			if (startDate == null && endDate == null)
+			{
+				throw new ArgumentException("At least one of the pair StartDate, EndDate must be specified");
+			}
+
 			StartDate = startDate;
 			EndDate = endDate;
 		}

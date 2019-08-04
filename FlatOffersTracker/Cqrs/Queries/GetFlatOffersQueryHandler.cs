@@ -1,30 +1,29 @@
 ﻿using Common.Cqrs;
+using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Entities;
-using System;
 using System.Collections.Generic;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
 	public class GetFlatOffersQueryHandler : IQueryHandler<IEnumerable<FlatOffer>, GetFlatOffersQuery>
 	{
-		public override bool Equals(object obj)
+		private IFlatOffersRepository _repository;
+
+		public GetFlatOffersQueryHandler(IFlatOffersRepository repository)
 		{
-			return base.Equals(obj);
+			_repository = repository;
 		}
 
 		public IEnumerable<FlatOffer> Get(GetFlatOffersQuery query)
 		{
-			throw new NotImplementedException();
-		}
-
-		public override int GetHashCode()
-		{
-			return base.GetHashCode();
-		}
-
-		public override string ToString()
-		{
-			return base.ToString();
+			return _repository.Get(
+				query.FlatType,
+				query.MinFlatSize,
+				query.NumberOfRooms, 
+				query.MaxPrice,
+				query.DateAdded,
+				query.DateRemoved
+			);
 		}
 	}
 }
