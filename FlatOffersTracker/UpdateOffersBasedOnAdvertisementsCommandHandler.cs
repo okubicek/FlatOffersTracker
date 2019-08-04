@@ -1,4 +1,4 @@
-﻿using FlatOffersTracker.Cqrs;
+﻿using Common.Cqrs;
 using FlatOffersTracker.Entities;
 using System;
 using System.Collections.Generic;

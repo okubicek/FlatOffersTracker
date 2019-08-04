@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace FlatOffersTrackerBackgroundApp.Migrations
+namespace EFRepository.Migrations
 {
     public partial class InitialSetup : Migration
     {

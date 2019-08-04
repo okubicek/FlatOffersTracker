@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FlatOffersTrackerBackgroundApp.DataAccess
+namespace EFRepository.DataAccess
 {
 	public static class DbContextExtensions
 	{
-		public static void FixStateOfEntitiesWithoutKey<T>(this DbContext context, IEnumerable<T> entities)
+		public static void FixStateOfEntitiesWithoutKey<T>(this DbContext context, IEnumerable<T> entities) where T : class
 		{
 			var addedEntities = entities.Where(x => !context.Entry(x).IsKeySet);
 			

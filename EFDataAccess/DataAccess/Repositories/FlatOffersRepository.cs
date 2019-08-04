@@ -1,11 +1,12 @@
-﻿using FlatOffersTrackerBackgroundApp.DataAccess.Context;
+﻿using EFRepository.DataAccess.Context;
 using FlatOffersTracker.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using FlatOffersTracker.DataAccess;
 using Microsoft.EntityFrameworkCore;
+using System;
 
-namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
+namespace EFRepository.DataAccess.Repositories
 {
 	public class FlatOffersRepository : IFlatOffersRepository
 	{
@@ -22,6 +23,11 @@ namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
 				.Include(x => x.Links)
 				.Include(x => x.Notifications)
 				.Where(x => x.DateRemoved == null);
+		}
+
+		public IEnumerable<FlatOffer> Get()
+		{
+			throw new NotImplementedException();
 		}
 
 		public void Save(IEnumerable<FlatOffer> offers)

@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\EFDataAccess\EFRepository.csproj" />
     <ProjectReference Include="..\FlatOffersTrackerBackgroundApp\FlatOffersTrackerBackgroundApp.csproj" />
     <ProjectReference Include="..\FlatOffersTracker\FlatOffersTracker.csproj" />
   </ItemGroup>

@@ -3,10 +3,10 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using FlatOffersTracker;
-using FlatOffersTracker.Cqrs;
+using Common.Cqrs;
 using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Parsing;
-using FlatOffersTrackerBackgroundApp.DataAccess.Repositories;
+using EFRepository.DataAccess.Repositories;
 
 namespace FlatOffersTrackerBackgroundApp.Bootstrap
 {

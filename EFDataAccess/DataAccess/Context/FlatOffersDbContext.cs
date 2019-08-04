@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FlatOffersTrackerBackgroundApp.DataAccess.Context
+namespace EFRepository.DataAccess.Context
 {
 	public class FlatOffersDbContext : DbContext
 	{

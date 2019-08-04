@@ -1,8 +1,9 @@
 ﻿using FlatOffersTracker.Cqrs;
 using FlatOffersTracker.Entities;
-using FlatOffersTrackerBackgroundApp.DataAccess.Repositories;
+using EFRepository.DataAccess.Repositories;
 using Serilog;
 using System;
+using Common.Cqrs;
 
 namespace FlatOffersTrackerBackgroundApp.Jobs
 {

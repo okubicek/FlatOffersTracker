@@ -1,8 +1,8 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.MsDependencyInjection;
+using EFRepository.DataAccess.Context;
 using FlatOffersTrackerBackgroundApp.Bootstrap;
-using FlatOffersTrackerBackgroundApp.DataAccess.Context;
 using FlatOffersTrackerBackgroundApp.Jobs;
 using Hangfire;
 using Hangfire.SqlServer;
@@ -60,7 +60,8 @@ namespace FlatOffersTrackerBackgroundApp
 				{
 					string connectionString = GetConnectionString(hostContext);
 					services.AddDbContext<FlatOffersDbContext>(options =>
-						options.UseSqlServer(connectionString)
+						options.UseSqlServer(connectionString, 
+							ob => ob.MigrationsAssembly(typeof(FlatOffersDbContext).Assembly.FullName))
 					);
 					services.AddSingleton(Log.Logger);
 				});

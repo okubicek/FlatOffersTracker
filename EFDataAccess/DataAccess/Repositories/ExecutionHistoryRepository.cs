@@ -1,8 +1,8 @@
-﻿using FlatOffersTrackerBackgroundApp.DataAccess.Context;
+﻿using EFRepository.DataAccess.Context;
 using FlatOffersTracker.Entities;
 using System.Linq;
 
-namespace FlatOffersTrackerBackgroundApp.DataAccess.Repositories
+namespace EFRepository.DataAccess.Repositories
 {
 	public class ExecutionHistoryRepository : IExecutionHistoryRepository
 	{

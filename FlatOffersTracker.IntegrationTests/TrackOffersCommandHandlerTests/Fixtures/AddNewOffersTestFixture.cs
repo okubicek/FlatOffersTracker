@@ -1,5 +1,5 @@
 ﻿using FlatOffersTracker.Parsing;
-using FlatOffersTrackerBackgroundApp.DataAccess.Repositories;
+using EFRepository.DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
 using Serilog;

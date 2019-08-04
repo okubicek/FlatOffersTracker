@@ -1,5 +1,5 @@
 ﻿using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Fixtures;
-using FlatOffersTrackerBackgroundApp.DataAccess.Context;
+using EFRepository.DataAccess.Context;
 using System.Linq;
 using Xunit;
 
