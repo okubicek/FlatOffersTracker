@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EFDataAccess\EFRepository.csproj" />
+    <ProjectReference Include="..\FlatOffersTracker.DependencyInjection\FlatOffersTracker.DependencyInjection.csproj" />
     <ProjectReference Include="..\FlatOffersTracker\FlatOffersTracker.csproj" />
   </ItemGroup>
 

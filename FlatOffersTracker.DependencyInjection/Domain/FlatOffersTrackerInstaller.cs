@@ -2,13 +2,10 @@
 using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
-using FlatOffersTracker;
 using Common.Cqrs;
-using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Parsing;
-using EFRepository.DataAccess.Repositories;
 
-namespace FlatOffersTrackerBackgroundApp.Bootstrap
+namespace FlatOffersTracker.DependencyInjection.Domain
 {
 	public class FlatOffersTrackerInstaller : IWindsorInstaller
 	{
@@ -26,16 +23,6 @@ namespace FlatOffersTrackerBackgroundApp.Bootstrap
 				.BasedOn(typeof(ICommand<,>))
 				.WithService
 				.Base()
-				.LifestyleTransient());
-
-			container.Register(Component
-				.For<IFlatOffersRepository>()
-				.ImplementedBy<FlatOffersRepository>()
-				.LifestyleTransient());
-
-			container.Register(Component
-				.For<IExecutionHistoryRepository>()
-				.ImplementedBy<ExecutionHistoryRepository>()
 				.LifestyleTransient());
 
 			container.Register(Classes

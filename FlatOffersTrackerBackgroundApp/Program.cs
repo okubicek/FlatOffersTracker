@@ -1,13 +1,12 @@
 ﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.MsDependencyInjection;
-using EFRepository.DataAccess.Context;
-using FlatOffersTrackerBackgroundApp.Bootstrap;
+using FlatOffersTracker.DependencyInjection.Domain;
+using FlatOffersTracker.DependencyInjection.Repository;
 using FlatOffersTrackerBackgroundApp.Jobs;
 using Hangfire;
 using Hangfire.SqlServer;
 using Hangfire.Windsor;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -34,6 +33,8 @@ namespace FlatOffersTrackerBackgroundApp
 
 		public static IHostBuilder CreateWebHostBuilder(string[] args) // calling this WebHostBuilder so entity framework is able to create migraitons
 		{
+			var persistencyInstaller = new EFCoreRepositoryInstaller();
+
 			var builder = new HostBuilder()
 				.UseServiceProviderFactory(new WindsorServiceProviderFactory())
 				.ConfigureContainer<IWindsorContainer>((hostContext, container) =>
@@ -47,6 +48,7 @@ namespace FlatOffersTrackerBackgroundApp
 						SlidingInvisibilityTimeout = TimeSpan.FromMinutes(1)
 					}));
 					container.Install(new FlatOffersTrackerInstaller());
+					container.Install(persistencyInstaller);
 
 					GlobalConfiguration.Configuration.UseWindsorActivator(container.Kernel);
 					//JobActivator.Current = new WindsorJobActivator(container.Kernel);
@@ -59,10 +61,7 @@ namespace FlatOffersTrackerBackgroundApp
 				.ConfigureServices((hostContext, services) =>
 				{
 					string connectionString = GetConnectionString(hostContext);
-					services.AddDbContext<FlatOffersDbContext>(options =>
-						options.UseSqlServer(connectionString, 
-							ob => ob.MigrationsAssembly(typeof(FlatOffersDbContext).Assembly.FullName))
-					);
+					persistencyInstaller.AddToServiceCollection(services, connectionString);
 					services.AddSingleton(Log.Logger);
 				});
 

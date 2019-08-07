@@ -1,10 +1,14 @@
+using Castle.Facilities.AspNetCore;
+using Castle.Windsor;
+using FlatOffersTracker.DependencyInjection.Repository;
+using FlatOffersTracker.Web.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace FlatOffersTracker.Web
 {
@@ -15,18 +19,31 @@ namespace FlatOffersTracker.Web
 			Configuration = configuration;
 		}
 
+		private static readonly WindsorContainer Container = new WindsorContainer();
+
 		public IConfiguration Configuration { get; }
 
 		// This method gets called by the runtime. Use this method to add services to the container.
-		public void ConfigureServices(IServiceCollection services)
+		public IServiceProvider ConfigureServices(IServiceCollection services)
 		{
+			Container.AddFacility<AspNetCoreFacility>(f => f.CrossWiresInto(services));
+
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+			var persistenceRepositoryInstaller = new EFCoreRepositoryInstaller();
+
+			persistenceRepositoryInstaller.AddToServiceCollection(services, 
+				Configuration.GetConnectionString("DefaultConnection"));
+			Container.Install(persistenceRepositoryInstaller);
 
 			// In production, the React files will be served from this directory
 			services.AddSpaStaticFiles(configuration =>
 			{
 				configuration.RootPath = "ClientApp/build";
 			});
+
+			return services.AddWindsor(Container, opts =>
+				opts.UseEntryAssembly(typeof(FlatOffersController).Assembly));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
