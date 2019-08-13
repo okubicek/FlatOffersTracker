@@ -66,7 +66,7 @@ namespace EFRepository.DataAccess.Repositories
 				query = query.WhereDateRemovedWithinRange(dateRemoved.Value);
 			}
 
-			return query.ToList();
+			return query.Include(x => x.Links).ToList();
 		}
 
 		public void Save(IEnumerable<FlatOffer> offers)

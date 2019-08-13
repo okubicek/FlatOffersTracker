@@ -1,5 +1,6 @@
 using Castle.Facilities.AspNetCore;
 using Castle.Windsor;
+using FlatOffersTracker.DependencyInjection.Domain;
 using FlatOffersTracker.DependencyInjection.Repository;
 using FlatOffersTracker.Web.Controllers;
 using Microsoft.AspNetCore.Builder;
@@ -34,7 +35,9 @@ namespace FlatOffersTracker.Web
 
 			persistenceRepositoryInstaller.AddToServiceCollection(services, 
 				Configuration.GetConnectionString("DefaultConnection"));
+
 			Container.Install(persistenceRepositoryInstaller);
+			Container.Install(new FlatOffersTrackerInstaller());
 
 			// In production, the React files will be served from this directory
 			services.AddSpaStaticFiles(configuration =>

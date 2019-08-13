@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetFlatOffersQueryHandler : IQueryHandler<IEnumerable<FlatOffer>, GetFlatOffersQuery>
+	public class GetFlatOffersQueryHandler : IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery>
 	{
 		private IFlatOffersRepository _repository;
 

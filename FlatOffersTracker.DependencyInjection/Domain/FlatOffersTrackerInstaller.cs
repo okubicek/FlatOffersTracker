@@ -21,6 +21,7 @@ namespace FlatOffersTracker.DependencyInjection.Domain
 			container.Register(Classes
 				.FromAssemblyContaining<TractOffersCommandHandler>()
 				.BasedOn(typeof(ICommand<,>))
+				.OrBasedOn(typeof(IQuery<,>))
 				.WithService
 				.Base()
 				.LifestyleTransient());
