@@ -6,16 +6,20 @@ export class FlatOfferCard extends Component {
         return (
             <div className="card">
                 <div className="card-body">
-                    <h5 className="card-title">{flatOffer.Address}</h5>
+                    <h5 className="card-title">{flatOffer.address}</h5>
                     <ul className="list-group">
-                        <li className="list-group-item">Size : {flatOffer.FlatSize}</li>
-                        <li className="list-group-item">Rooms : {flatOffer.NumberOfRooms}</li>
-                        <li className="list-group-item">Type : {flatOffer.FlatType}</li>
+                        <li className="list-group-item">Size : {flatOffer.flatSize}</li>
+                        <li className="list-group-item">Rooms : {flatOffer.numberOfRooms}</li>
+                        <li className="list-group-item">Type : {flatOffer.flatType}</li>
                     </ul>
-                    <a>{flatOffer.Url}</a>
-                    <h4 className="card-text float-right">{flatOffer.Price}</h4>
+                    <a href={flatOffer.url}>{flatOffer.url}</a>
+                    <h4 className="card-text float-right">{flatOffer.price.toLocaleString()} Kc</h4>
                 </div>
             </div>
         )
+    }
+
+    format(num) {
+        return  
     }
 }

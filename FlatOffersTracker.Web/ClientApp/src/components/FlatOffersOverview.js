@@ -16,7 +16,11 @@ export class FlatOffersOverview extends Component {
 
     renderFlatOffers(flatOffers) {
         return (
-            flatOffers.map(offer => <FlatOfferCard flatOffer="{offer}" />)            
+            flatOffers.map(offer =>
+                <div className="col col-sm-4">
+                    <FlatOfferCard flatOffer={offer} />
+                </div>
+            )
         );
     }
 
