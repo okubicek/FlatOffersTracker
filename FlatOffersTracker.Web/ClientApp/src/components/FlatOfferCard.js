@@ -4,16 +4,16 @@ export class FlatOfferCard extends Component {
     render() {
         var flatOffer = this.props.flatOffer;
         return (
-            <div className="card">
+            <div className="card mt-4">
                 <div className="card-body">
                     <h5 className="card-title">{flatOffer.address}</h5>
-                    <ul className="list-group">
-                        <li className="list-group-item">Size : {flatOffer.flatSize}</li>
-                        <li className="list-group-item">Rooms : {flatOffer.numberOfRooms}</li>
-                        <li className="list-group-item">Type : {flatOffer.flatType}</li>
-                    </ul>
-                    <a href={flatOffer.url}>{flatOffer.url}</a>
-                    <h4 className="card-text float-right">{flatOffer.price.toLocaleString()} Kc</h4>
+                    <dl className="row">
+                        <dt className="col col-sm-4">Size:</dt><dd className="col col-sm-8">{flatOffer.flatSize}</dd>
+                        <dt className="col col-sm-4">Rooms:</dt><dd className="col col-sm-8">{flatOffer.numberOfRooms}</dd>
+                        <dt className="col col-sm-4">Type:</dt><dd className="col col-sm-8">{flatOffer.flatType}</dd>
+                    </dl>
+                    <a href={flatOffer.url} target="_blank">Navigate to</a>
+                    <h4 className="card-text float-right" target="_blank">{flatOffer.price.toLocaleString()} Kc</h4>
                 </div>
             </div>
         )
