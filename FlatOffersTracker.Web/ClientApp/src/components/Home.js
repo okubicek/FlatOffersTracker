@@ -7,9 +7,7 @@ export class Home extends Component {
   render () {
     return (
         <div className="container fluid">
-            <div className="row">
-                <FlatOffersOverview />
-            </div>
+            <FlatOffersOverview />
         </div>
     );
   }

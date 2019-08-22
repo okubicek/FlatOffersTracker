@@ -1,5 +1,6 @@
-﻿import React, { Component } from 'react';
+﻿import React, { Component, Fragment } from 'react';
 import { FlatOfferCard } from './FlatOfferCard';
+import { SearchPane } from './SearchPane';
 
 export class FlatOffersOverview extends Component {
     constructor(props) {
@@ -16,11 +17,18 @@ export class FlatOffersOverview extends Component {
 
     renderFlatOffers(flatOffers) {
         return (
-            flatOffers.map(offer =>
-                <div className="col col-sm-4">
-                    <FlatOfferCard flatOffer={offer} />
-                </div>
-            )
+            <React.Fragment>
+            <div className="row">
+                <SearchPane items={flatOffers} />
+            </div>
+            <div className="row">
+                {flatOffers.map(offer =>
+                    <div className="col col-sm-4">
+                        <FlatOfferCard flatOffer={offer} />
+                    </div>
+                )}
+            </div>
+            </React.Fragment>
         );
     }
 
