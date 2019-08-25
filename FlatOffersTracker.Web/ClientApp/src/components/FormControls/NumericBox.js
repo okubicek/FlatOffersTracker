@@ -7,7 +7,7 @@ export class NumericBox extends Component {
     }
 
     handleChange(e) {
-        this.props.OnChange(e.target);
+        this.props.onChange(e.target);
     }
 
     render() {
@@ -15,6 +15,7 @@ export class NumericBox extends Component {
             <div className="form-group">
                 <label>{this.props.label}</label>
                 <input type="numeric"
+                    name={this.props.name}
                     value={this.props.value}
                     onChange={this.handleChange}
                     className="form-control"

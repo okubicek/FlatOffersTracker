@@ -6,7 +6,7 @@ export class TextBox extends Component {
     }
 
     handleChange(e) {
-        this.props.OnChange(e.target);
+        this.props.onChange(e.target);
     }
 
     render() {
@@ -14,6 +14,7 @@ export class TextBox extends Component {
             <div className="form-group">
                 <label>{this.props.label}</label>
                 <input type="text"
+                    name={this.props.name}
                     value={this.props.value}
                     onChange={this.handleChange}
                     className="form-control"

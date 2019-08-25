@@ -2,6 +2,7 @@
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,9 +19,15 @@ namespace FlatOffersTracker.Web.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public IEnumerable<Models.FlatOffer> Get()
+		public IEnumerable<Models.FlatOffer> Get(Models.FlatOffersSearchParams query)
         {
-			var offers = _getFlatOffers.Get(new GetFlatOffersQuery());
+			var offers = _getFlatOffers.Get(new GetFlatOffersQuery {
+				FlatType = query.FlatType != null ? (FlatType?) Enum.Parse(typeof(FlatType), query.FlatType, true) : null,
+				MaxPrice = query.MaxPrice,
+				MinFlatSize = query.MinFlatSize,
+				NumberOfRooms = query.RoomCount
+			});
+
 			return offers.Select(x => new Models.FlatOffer {
 				Address = x.Address,
 				NumberOfRooms = x.NumberOfRooms,

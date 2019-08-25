@@ -12,7 +12,7 @@ export class SelectBox extends Component {
 
     renderOptions() {
         return (
-            this.props.options.map(val => 
+            this.props.options.map(val =>
                 <option>{val}</option>
             )
         );
@@ -23,11 +23,13 @@ export class SelectBox extends Component {
             <div className="form-group">
                 <label>{this.props.label}</label>
                 <select
+                    name={this.props.name}
                     className="form-control"
                     value={this.props.value}
                     onChange={this.handleChange}
                 >
-                    this.renderOptions()
+                    <option></option>
+                    {this.renderOptions()}
                 </select>
             </div>
         );
