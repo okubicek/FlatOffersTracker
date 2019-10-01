@@ -13,12 +13,24 @@ export class SearchPane extends Component {
                 maxPrice: '',
                 flatType: '',
             },
-            roomCountOptions: [...new Set(props.items.map(item => item.numberOfRooms))],
-            flatTypeOptions: [...new Set(props.items.map(item => item.flatType))]
+            roomCountOptions: [],
+            flatTypeOptions: []
         };
 
         this.handleParamsChange = this.handleParamsChange.bind(this);
         this.handleSearch = this.handleSearch.bind(this);
+
+        this.getDefinitions("FlatType")
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ flatTypeOptions: data.map((item) => ({ key: item.key, value : item.value })) })
+            });
+
+        this.getDefinitions("NumberOfRooms")
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ roomCountOptions: data.map((item) => ({ key: item.key, value : item.value }))})
+            });
     }
 
     handleParamsChange(target) {
@@ -35,6 +47,13 @@ export class SearchPane extends Component {
         var searchParams = this.state.searchParams;
 
         this.props.handleSearch(searchParams);
+    }
+
+    getDefinitions(type) {
+        var url = new URL("api/FlatOffers/Definitions", "https://" + window.location.host);
+        url.searchParams.append("definitionType", type);
+
+        return fetch(url)
     }
 
     render() {
@@ -72,7 +91,7 @@ export class SearchPane extends Component {
                                     options={this.state.flatTypeOptions}
                                 />
                                 <button type="submit"
-                                    className="form-control"
+                                    className="form-control btn-primary"
                                     onClick={this.handleSearch}>Search</button>
                             </div>
                         </div>

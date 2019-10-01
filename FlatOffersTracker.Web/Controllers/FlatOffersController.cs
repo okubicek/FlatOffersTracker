@@ -1,6 +1,7 @@
 ﻿using Common.Cqrs;
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
+using FlatOffersTracker.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -37,5 +38,21 @@ namespace FlatOffersTracker.Web.Controllers
 				Url = x.Links.First().Url
 			});
         }
-    }
+
+		[HttpGet("[action]")]
+		public IEnumerable<Models.SelectOption> Definitions(string definitionType)
+		{
+			Enum.TryParse(definitionType, out Models.DefinitionTypes defType);
+
+			switch (defType)
+			{
+				case Models.DefinitionTypes.FlatType:
+					return EnumHelper.ConvertEnumtToSelectList<FlatType>();
+				case Models.DefinitionTypes.NumberOfRooms:
+					return new List<Models.SelectOption> { new Models.SelectOption(1, "2"), new Models.SelectOption(2, "3") };
+				default:
+					throw new ArgumentException($"Value {definitionType} is not supported definition type");
+			}
+		}		
+	}
 }

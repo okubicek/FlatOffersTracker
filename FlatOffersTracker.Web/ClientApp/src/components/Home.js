@@ -32,7 +32,7 @@ export class Home extends Component {
         return (
             <React.Fragment>
                 <div className="container fluid">
-                    <SearchPane items={this.state.flatOffers}
+                    <SearchPane
                         handleSearch={this.fetchFlatOffers} />
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}

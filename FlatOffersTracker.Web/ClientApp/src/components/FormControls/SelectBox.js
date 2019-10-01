@@ -12,8 +12,8 @@ export class SelectBox extends Component {
 
     renderOptions() {
         return (
-            this.props.options.map(val =>
-                <option>{val}</option>
+            this.props.options.map(opt =>
+                <option key={opt.key} value={opt.value}>{opt.value}</option>
             )
         );
     }
