@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { NumericBox } from './FormControls/NumericBox';
 import { SelectBox } from './FormControls/SelectBox';
+import { DateBox } from './FormControls/DateBox';
 
 export class SearchPane extends Component {
     constructor(props) {
@@ -12,6 +13,8 @@ export class SearchPane extends Component {
                 roomCount: '',
                 maxPrice: '',
                 flatType: '',
+                startDate: new Date(),
+                endDate: new Date()
             },
             roomCountOptions: [],
             flatTypeOptions: []
@@ -89,6 +92,18 @@ export class SearchPane extends Component {
                                     value={this.state.searchParams.flatType}
                                     onChange={this.handleParamsChange}
                                     options={this.state.flatTypeOptions}
+                                />
+                                <DateBox
+                                    label="Start Date"
+                                    value={this.state.searchParams.startDate}
+                                    onChange={this.handleParamsChange}
+                                    name="startDate"
+                                />
+                                <DateBox
+                                    label="End Date"
+                                    value={this.state.searchParams.endDate}
+                                    onChange={this.handleParamsChange}
+                                    name="endDate"
                                 />
                                 <button type="submit"
                                     className="form-control btn-primary"
