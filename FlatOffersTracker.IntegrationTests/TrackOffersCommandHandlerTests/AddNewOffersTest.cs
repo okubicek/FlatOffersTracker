@@ -57,5 +57,16 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 				.Count()
 			);
 		}
+
+		[Fact]
+		public void Inserted_Single_Image()
+		{
+			var ad = AdvertisementFactory.GetAdverstisementType1();
+
+			Assert.Equal(1, _context.FlatOffers
+				.SelectMany(x => x.Images)
+				.Count()
+			);
+		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Common.Extensions.EnumerableExtensions;
 using FlatOffersTracker.Entities;
 using FlatOffersTracker.Parsing.QuerySets;
 using OpenQA.Selenium;
@@ -26,7 +27,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 
 		public SRealityCollector(ILogger logger)
 		{
-			_logger = logger;
+			_logger = logger;			
 		}
 
 		public IEnumerable<Advertisement> Collect()
@@ -55,7 +56,9 @@ namespace FlatOffersTracker.Parsing.Collectors
 				SetMaxNumberOfAdvertisementsPerSinglePage(browser);
 				var elements = GetIndividualAdvertisements(browser);
 
-				var advertisements = elements.Select(el => new Advertisement
+				var advertisements = elements
+					.Where(el => el.FindElements(By.CssSelector(".tip-region")).None())
+					.Select(el => new Advertisement
 				{
 					Url = el.FindElement(By.CssSelector(".title")).GetAttribute("href"),
 					FlatType = query.FlatType,
@@ -63,12 +66,24 @@ namespace FlatOffersTracker.Parsing.Collectors
 					Address = el.FindElement(By.CssSelector(".locality")).GetAttribute("innerHTML"),
 					Price = ExtractPrice(el.FindElement(By.CssSelector(".norm-price")).GetAttribute("innerHTML")),
 					FlatSize = ExtractFlatSize(el.FindElement(By.CssSelector(".name")).GetAttribute("innerHTML")),
-					UniqueId = ExtractUid(el.FindElement(By.CssSelector(".title")).GetAttribute("href"))
+					UniqueId = ExtractUid(el.FindElement(By.CssSelector(".title")).GetAttribute("href")),
+					ImagesUrl = ExtractImageUrls(el.FindElement(By.CssSelector(".images"))).ToList()
 				}).ToList();
 
 				_logger.Information("url {url} pulled {count} advertisements", url, advertisements.Count);
 
 				return advertisements;
+			}
+		}
+
+		private IEnumerable<string> ExtractImageUrls(IWebElement imagesWrapper)
+		{
+			var images = imagesWrapper.FindElements(By.TagName("img"));
+
+			foreach(var image in images)
+			{
+				var src = image.GetAttribute("src");
+				yield return src;
 			}
 		}
 
@@ -132,12 +147,12 @@ namespace FlatOffersTracker.Parsing.Collectors
 			return decimal.Parse(extractedNumbers);
 		}
 
-		private int ExtractUid(string url)
+		private long ExtractUid(string url)
 		{
 			var i = url.LastIndexOf('/');
 			var stringId = url.Substring(i + 1, (url.Length - i) - 1);
 
-			if (int.TryParse(stringId, out var id))
+			if (long.TryParse(stringId, out var id))
 			{
 				return id;
 			}

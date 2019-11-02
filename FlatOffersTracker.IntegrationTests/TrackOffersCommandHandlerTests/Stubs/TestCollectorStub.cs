@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 {
-	class TestCollectorStub : IAdvertisementsCollector
+	public class TestCollectorStub : IAdvertisementsCollector
 	{
 		private List<Advertisement> _ads = new List<Advertisement>();
 

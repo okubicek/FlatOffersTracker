@@ -1,5 +1,7 @@
 ﻿using Common.Cqrs;
+using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
+using FlatOffersTracker.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,62 +11,79 @@ namespace FlatOffersTracker
 	public class UpdateOffersBasedOnAdvertisementsCommandHandler
 		: ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand>
 	{
+		private IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery> _getImages;
+
+		private IQuery<FlatOffersWithImage> _getFlatOffersWithImage;
+
+		public UpdateOffersBasedOnAdvertisementsCommandHandler(
+			IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery> getImages, 
+			IQuery<FlatOffersWithImage> getFlatOffersWithImage)
+		{
+			_getImages = getImages;
+			_getFlatOffersWithImage = getFlatOffersWithImage;
+		}
+
 		public IEnumerable<FlatOffer> Execute(UpdateOffersBasedOnAdvertisementsCommand command)
 		{
-			MatchAdvertisementsToOffers(command.Offers,
-				command.Advertisements,
-				out var matchedAdvertisements,
-				out var offersWithMatchingAdvertisement);
+			var matches = new FlatOffersToAdvertisementMatcher(command.Offers, command.Advertisements);
+			ProcessOffersMatchedToAds(matches.Matched);
 
-			var closedOffers = CloseUnmatchedOffers(command.Offers, offersWithMatchingAdvertisement);
+			var closedOffers = CloseUnmatchedOffers(matches.UnmatchedOffers);
+			var newOffers = GenerateNewOffersForUnmatchedAdvertisements(matches.UnmatchedAds);
 
-			var unmatchedAdvertisements = command.Advertisements.Except(matchedAdvertisements);
-			GenerateNewOffersForUnmatchedAdvertisements(offersWithMatchingAdvertisement, unmatchedAdvertisements);
-
-			var result = ConcatenateOffers(offersWithMatchingAdvertisement, closedOffers);
+			var result = ConcatenateOffers(matches.Matched, newOffers, closedOffers);
 			return result;
 		}
 
-		private static IEnumerable<FlatOffer> CloseUnmatchedOffers(IEnumerable<FlatOffer> offers, HashSet<FlatOffer> offersWithMatchingAdvertisement)
+		private void ProcessOffersMatchedToAds(List<(FlatOffer offer, Advertisement ad)> matches)
 		{
-			var closedOffers = offers.Except(offersWithMatchingAdvertisement);
-			foreach (var closedOffer in closedOffers)
+			var offersWithImagesStored = _getFlatOffersWithImage.Get();
+
+			var imageDownloadRequest = new GetImagesByUrlQuery
 			{
-				closedOffer.MarkAsRemoved();
-			}
+				Requests = matches
+					.Where(x => !offersWithImagesStored.HasImages(x.offer.Id.Value))
+					.Select(x => (x.ad.UniqueId, x.ad.ImagesUrl))
+			};
 
-			return closedOffers;
-		}
+			var downloadedImages = _getImages.Get(imageDownloadRequest);
 
-		private static void MatchAdvertisementsToOffers(IEnumerable<FlatOffer> offers,
-			IEnumerable<Advertisement> advertisements,
-			out List<Advertisement> matchedAdvertisements,
-			out HashSet<FlatOffer> offersWithMatchingAdvertisement)
-		{
-			matchedAdvertisements = new List<Advertisement>();
-			offersWithMatchingAdvertisement = new HashSet<FlatOffer>();
-
-			foreach (var offer in offers)
+			foreach (var match in matches)
 			{
-				foreach (var ad in advertisements)
+				var offer = match.offer;
+				var ad = match.ad;
+
+				if (match.offer.Price != ad.Price)
 				{
-					var matched = offer.MatchAdvertisement(ad);
-					if (matched)
-					{
-						if(offer.Price != ad.Price)
-						{
-							offer.Price = ad.Price;
-							offer.AddNotification(NotificationType.PriceChanged);
-						}
-						matchedAdvertisements.Add(ad);
-						offersWithMatchingAdvertisement.AddIfNotExists(offer);
-					}
+					offer.Price = ad.Price;
+					offer.AddNotification(NotificationType.PriceChanged);
 				}
+
+				FillerOfferImages(match.ad.UniqueId, downloadedImages, offer);
 			}
 		}
 
-		private static void GenerateNewOffersForUnmatchedAdvertisements(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<Advertisement> unmatchedAdvertisements)
+		private static IEnumerable<FlatOffer> CloseUnmatchedOffers(IEnumerable<FlatOffer> offersToClose)
 		{
+			foreach (var offerToClose in offersToClose)
+			{
+				offerToClose.MarkAsRemoved();
+			}
+
+			return offersToClose;
+		}
+
+		private IEnumerable<FlatOffer> GenerateNewOffersForUnmatchedAdvertisements(IEnumerable<Advertisement> unmatchedAdvertisements)
+		{
+			var newOffers = new HashSet<FlatOffer>(); // for cases when same offer appears on multiple sites
+
+			var imageDownloadRequest = new GetImagesByUrlQuery
+			{
+				Requests = unmatchedAdvertisements.Select(x => (x.UniqueId, x.ImagesUrl))
+			};
+
+			var downloadedImages = _getImages.Get(imageDownloadRequest);
+
 			foreach (var ad in unmatchedAdvertisements)
 			{
 				var offer = new FlatOffer
@@ -77,26 +96,43 @@ namespace FlatOffersTracker
 					Price = ad.Price
 				};
 
-				if (offersWithMatchingAdvertisement.TryGetValue(offer, out var offerToUpdate))
+				if (newOffers.TryGetValue(offer, out var offerToUpdate))
 				{
 					offer = offerToUpdate;
 				}
 				else
 				{
 					offer.AddNotification(NotificationType.OfferAdded);
-					offersWithMatchingAdvertisement.Add(offer);
+					FillerOfferImages(ad.UniqueId, downloadedImages, offer);
+					newOffers.Add(offer);
 				}
 
 				offer.AddLink(ad.Url, ad.UniqueId);
 			}
+
+			return newOffers.ToList();
 		}
 
-		private static IEnumerable<FlatOffer> ConcatenateOffers(HashSet<FlatOffer> offersWithMatchingAdvertisement, IEnumerable<FlatOffer> closedOffers)
+		private static IEnumerable<FlatOffer> ConcatenateOffers(List<(FlatOffer offer, Advertisement ad)> matched, IEnumerable<FlatOffer> newOffers, IEnumerable<FlatOffer> closedOffers)
 		{
-			var offers = offersWithMatchingAdvertisement.ToList();
+			var offers = matched.Select(x => x.offer).ToList();
+			offers.AddRange(newOffers);
 			offers.AddRange(closedOffers);
 
 			return offers;
+		}
+
+		private static void FillerOfferImages(long adId, Dictionary<long, List<byte[]>> downloadedImages, FlatOffer offer)
+		{
+			if (downloadedImages.TryGetValue(adId, out var images))
+			{
+				short order = 1;
+				foreach (var image in images)
+				{
+					offer.AddImage(image, order);
+					order++;
+				}
+			}
 		}
 	}
 }

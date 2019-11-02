@@ -4,4 +4,9 @@
 	{
 		TReturn Get(TParam query);
 	}
+
+	public interface IQuery<TReturn>
+	{
+		TReturn Get();
+	}
 }

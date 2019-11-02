@@ -1,15 +1,11 @@
-﻿using FlatOffersTracker.Parsing;
-using EFRepository.DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Respawn;
-using Serilog;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Factories;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 {	
-	public class RemoveAndAddFlatOfferTestFixture : IDisposable
+	public class RemoveAndAddFlatOfferTestFixture
 	{
 		public RemoveAndAddFlatOfferTestFixture(FlatOffersDbContextFixture dbFixture)
 		{
@@ -25,10 +21,7 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 			var collector = new TestCollectorStub();
 			collector.Add(Ad2);
 
-			var underTest = new TractOffersCommandHandler(new FlatOffersRepository(dbFixture.Context),
-				new UpdateOffersBasedOnAdvertisementsCommandHandler(),
-				new List<IAdvertisementsCollector> { collector },
-				Log.Logger);
+			var underTest = TrackOfferHandlerFactory.GetInstance(dbFixture.Context, collector);
 
 			underTest.Execute();
 		}
@@ -36,13 +29,9 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 		private static void PopulateTables(FlatOffersDbContextFixture dbFixture, Entities.FlatOffer Offer)
 		{
 			var context = dbFixture.Context;
-
+			
 			context.FlatOffers.Add(Offer);
 			context.SaveChanges();
-		}
-
-		public void Dispose()
-		{			
 		}
 	}
 }

@@ -4,14 +4,16 @@ using EFRepository.DataAccess.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EFRepository.Migrations
 {
     [DbContext(typeof(FlatOffersDbContext))]
-    partial class FlatOffersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191013203028_AddingImages")]
+    partial class AddingImages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

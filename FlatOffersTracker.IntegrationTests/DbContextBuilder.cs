@@ -18,7 +18,7 @@ namespace FlatOffersTracker.IntegrationTests
 				x => x.MigrationsAssembly(typeof(T).Assembly.GetName().Name))
 			.UseInternalServiceProvider(serviceProvider);
 
-			var context = create(builder.Options);			
+			var context = create(builder.Options);
 			context.Database.Migrate();
 			
 			return context;

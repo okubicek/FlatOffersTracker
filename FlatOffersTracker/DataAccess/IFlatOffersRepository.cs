@@ -16,6 +16,8 @@ namespace FlatOffersTracker.DataAccess
 			DateRange? dateAdded,
 			DateRange? dateRemoved);
 
+		HashSet<int> GetFlatOfferIdsWithStoredImages();
+
 		void Save(IEnumerable<FlatOffer> offers);
 	}
 }

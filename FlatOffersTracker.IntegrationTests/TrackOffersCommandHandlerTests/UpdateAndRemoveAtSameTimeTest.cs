@@ -48,5 +48,24 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 				.Count()
 			);
 		}
+
+		[Fact]
+		public void Price_Has_Been_Updated()
+		{
+			Assert.Equal(1, _context.FlatOffers
+				.Where(x => x.Price == UpdateAndRemoveAtSameTimeTestFixture.UpdatedPrice)
+				.Count()
+			);
+		}
+
+		[Fact]
+		public void There_are_two_images_in_db()
+		{
+			Assert.Equal(2, _context.FlatOffers
+				.SelectMany(x => x.Notifications)
+				.Where(x => x.Type == Entities.NotificationType.OfferAdded)
+				.Count()
+			);
+		}
 	}
 }

@@ -15,7 +15,8 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 				NumberOfRooms = 2,
 				Price = 100000,
 				UniqueId = 808080,
-				Url = "https://Traaadlfsl.com"
+				Url = "https://Traaadlfsl.com",
+				ImagesUrl = new System.Collections.Generic.List<string> { "www.something.jpg" }
 			};
 		}
 
@@ -29,7 +30,8 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 				NumberOfRooms = offer.NumberOfRooms,
 				Price = offer.Price,
 				UniqueId = offer.Links.First().UniqueId,
-				Url = offer.Links.First().Url
+				Url = offer.Links.First().Url,
+				ImagesUrl = new System.Collections.Generic.List<string> { "www.FakeUrl.com" }
 			};
 		}
 	}

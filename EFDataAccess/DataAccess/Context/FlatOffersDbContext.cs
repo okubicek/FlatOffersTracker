@@ -18,9 +18,11 @@ namespace EFRepository.DataAccess.Context
 		{
 			builder
 				.Entity<FlatOffer>()
-				.ToTable("FlatOffers");
-			AddPrimaryKey(builder
-				.Entity<FlatOffer>());
+				.ToTable("FlatOffers")
+				.HasKey("Id");			
+			builder.Entity<FlatOffer>()
+				.Property(x => x.Id)
+				.ValueGeneratedOnAdd();
 			builder
 				.Entity<FlatOffer>()
 				.HasMany(x => x.Links)
@@ -40,6 +42,16 @@ namespace EFRepository.DataAccess.Context
 			builder.Entity<Notification>()
 				.HasOne(x => x.FlatOffer)
 				.WithMany(x => x.Notifications);
+
+			builder.Entity<Image>()
+				.ToTable("FlatOfferImages")
+				.HasKey(x => x.Id);
+			builder.Entity<Image>()
+				.Property(x => x.Id)
+				.ValueGeneratedOnAdd();
+			builder.Entity<Image>()
+				.HasOne(x => x.FlatOffer)
+				.WithMany(x => x.Images);
 
 			builder
 				.Entity<ExecutionRecord>()

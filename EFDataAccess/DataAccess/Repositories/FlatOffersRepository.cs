@@ -22,7 +22,7 @@ namespace EFRepository.DataAccess.Repositories
 		{
 			return _dbContext.FlatOffers
 				.Include(x => x.Links)
-				.Include(x => x.Notifications)
+				.Include(x => x.Notifications)				
 				.Where(x => x.DateRemoved == null);
 		}
 
@@ -73,9 +73,22 @@ namespace EFRepository.DataAccess.Repositories
 		{
 			_dbContext.FixStateOfEntitiesWithoutKey(offers.SelectMany(x => x.Notifications));
 			_dbContext.FixStateOfEntitiesWithoutKey(offers.SelectMany(x => x.Links));
+			_dbContext.FixStateOfEntitiesWithoutKey(offers.Where(x => x.Images != null).SelectMany(x => x.Images));
 
 			_dbContext.FlatOffers.UpdateRange(offers);
 			_dbContext.SaveChanges();
+		}
+
+		public HashSet<int> GetFlatOfferIdsWithStoredImages()
+		{
+			return _dbContext
+				.FlatOffers
+				.Where(x => !x.Removed)
+				.Select(x => new { FlatOfferId = x.Id, Count = x.Images.Count() })
+				.Where(x => x.Count > 0)
+				.Select(x => x.FlatOfferId.Value)
+				.Distinct()
+				.ToHashSet();
 		}
 	}
 }

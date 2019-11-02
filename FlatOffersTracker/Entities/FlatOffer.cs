@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FlatOffersTracker.Entities
 {
 	public class FlatOffer
 	{
+		public int? Id { get; set; }
+
 		public string Address { get; set; }
 
 		public int FlatSize { get; set; }
@@ -23,6 +24,8 @@ namespace FlatOffersTracker.Entities
 		public decimal Price { get; set; }
 
 		public List<Notification> Notifications { get; set; }
+
+		public List<Image> Images { get; set; }
 
 		public bool Removed { get; set; }
 
@@ -46,29 +49,23 @@ namespace FlatOffersTracker.Entities
 			Links.Add(new Link(AdvertisementUrl, uniqueId, this));
 		}
 
+		public void AddImage(byte[] content, short sortOrder)
+		{
+			if (Images == null)
+			{
+				Images = new List<Image>();
+			}
+
+			Images.Add(new Image(content, sortOrder, this));
+		}
+
 		public void MarkAsRemoved()
 		{
 			Removed = true;
 			DateRemoved = DateTime.Now;
 
 			AddNotification(NotificationType.OfferRemoved);
-		}
-
-		public bool MatchAdvertisement(Advertisement ad)
-		{
-			if (MatchOnUniqueId(ad))
-			{
-				return true;
-			}
-
-			if (MatchOnFlatParams(ad))
-			{
-				AddLink(ad.Url, ad.UniqueId);
-				return true;
-			}
-
-			return false;
-		}
+		}		
 
 		public override bool Equals(object obj)
 		{
@@ -83,19 +80,6 @@ namespace FlatOffersTracker.Entities
 		public override int GetHashCode()
 		{
 			return HashCode.Combine(Address, FlatSize, FlatType, NumberOfRooms);
-		}
-
-		private bool MatchOnFlatParams(Advertisement ad)
-		{
-			return FlatSize == ad.FlatSize &&
-							FlatType == ad.FlatType &&
-							NumberOfRooms == ad.NumberOfRooms &&
-							Address.Equals(ad.Address);
-		}
-
-		private bool MatchOnUniqueId(Advertisement ad)
-		{
-			return Links.Any(lnk => lnk.UniqueId ==  ad.UniqueId);
 		}
 	}
 }

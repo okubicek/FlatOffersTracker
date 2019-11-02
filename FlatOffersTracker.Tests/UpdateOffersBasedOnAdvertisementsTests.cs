@@ -1,5 +1,7 @@
-﻿using FlatOffersTracker.Entities;
-using System;
+﻿using Common.Cqrs;
+using FlatOffersTracker.Cqrs.Queries;
+using FlatOffersTracker.Entities;
+using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
@@ -17,7 +19,14 @@ namespace FlatOffersTracker.Tests
 		public UpdateOffersBasedOnAdvertisementsTestsBase()
 		{
 			SetupTestObjects();
-			var _update = new UpdateOffersBasedOnAdvertisementsCommandHandler();
+
+			var flatOffersWithImageMock = new Mock<IQuery<FlatOffersWithImage>>();
+			flatOffersWithImageMock.Setup(x => x.Get()).Returns(new FlatOffersWithImage(new HashSet<int> { 1, 2 }));
+
+			var imageDownloaderMock = new Mock<IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery>>();
+			imageDownloaderMock.Setup(x => x.Get(It.IsAny<GetImagesByUrlQuery>())).Returns(new Dictionary<long, List<byte[]>>());
+
+			var _update = new UpdateOffersBasedOnAdvertisementsCommandHandler(imageDownloaderMock.Object, flatOffersWithImageMock.Object);
 
 			Result = _update.Execute(new UpdateOffersBasedOnAdvertisementsCommand
 			{
@@ -51,10 +60,11 @@ namespace FlatOffersTracker.Tests
 			};
 		}
 
-		protected FlatOffer GenerateOfferFromAdvertisement(Advertisement ad, decimal? priceOverride = null)
+		protected FlatOffer GenerateOfferFromAdvertisement(int id, Advertisement ad, decimal? priceOverride = null)
 		{
 			var offer = new FlatOffer
 			{
+				Id = id,
 				Address = ad.Address,
 				FlatSize = ad.FlatSize,
 				FlatType = ad.FlatType,
@@ -120,8 +130,8 @@ namespace FlatOffersTracker.Tests
 	{
 		protected override IEnumerable<FlatOffer> FlatOffers => new List<FlatOffer>
 		{
-			GenerateOfferFromAdvertisement(FirstAdvertisement),
-			GenerateOfferFromAdvertisement(SecondAdvertisement),
+			GenerateOfferFromAdvertisement(1, FirstAdvertisement),
+			GenerateOfferFromAdvertisement(2, SecondAdvertisement),
 		};
 
 		protected override IEnumerable<Advertisement> Advertisements => new List<Advertisement>
@@ -141,7 +151,7 @@ namespace FlatOffersTracker.Tests
 	{
 		protected override IEnumerable<FlatOffer> FlatOffers => new List<FlatOffer>
 		{
-			GenerateOfferFromAdvertisement(FirstAdvertisement)
+			GenerateOfferFromAdvertisement(1, FirstAdvertisement)
 		};
 
 		protected override IEnumerable<Advertisement> Advertisements => new List<Advertisement>
@@ -160,8 +170,8 @@ namespace FlatOffersTracker.Tests
 	{
 		protected override IEnumerable<FlatOffer> FlatOffers => new List<FlatOffer>
 		{
-			GenerateOfferFromAdvertisement(FirstAdvertisement),
-			GenerateOfferFromAdvertisement(SecondAdvertisement),
+			GenerateOfferFromAdvertisement(1, FirstAdvertisement),
+			GenerateOfferFromAdvertisement(2, SecondAdvertisement),
 		};
 
 		protected override IEnumerable<Advertisement> Advertisements => new List<Advertisement>
@@ -187,7 +197,7 @@ namespace FlatOffersTracker.Tests
 	{
 		protected override IEnumerable<FlatOffer> FlatOffers => new List<FlatOffer>
 		{
-			GenerateOfferFromAdvertisement(FirstAdvertisement, FirstAdvertisement.Price + 1500)			
+			GenerateOfferFromAdvertisement(1, FirstAdvertisement, FirstAdvertisement.Price + 1500)			
 		};
 
 		protected override IEnumerable<Advertisement> Advertisements => new List<Advertisement> { FirstAdvertisement };

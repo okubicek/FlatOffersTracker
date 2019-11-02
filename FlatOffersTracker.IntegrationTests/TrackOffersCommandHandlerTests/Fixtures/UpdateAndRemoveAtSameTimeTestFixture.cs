@@ -1,15 +1,14 @@
-﻿using FlatOffersTracker.Parsing;
-using EFRepository.DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Respawn;
-using Serilog;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Factories;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Fixtures
 {
 	public class UpdateAndRemoveAtSameTimeTestFixture
 	{
+		public const decimal UpdatedPrice = 444;
+
 		public UpdateAndRemoveAtSameTimeTestFixture(FlatOffersDbContextFixture dbFixture)
 		{
 			var connectionString = dbFixture.Context.Database.GetDbConnection().ConnectionString;
@@ -19,7 +18,7 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Fixt
 			var Offer = FlatOfferFactory.GetFlatOfferType1();
 			var Ad1 = AdvertisementFactory.GetAdverstisementType1();
 			var Ad2 = AdvertisementFactory.GetAdvertisementBasedOnOffer(Offer);
-			Ad2.Price = 444;
+			Ad2.Price = UpdatedPrice;
 
 			PopulateTables(dbFixture, Offer);
 
@@ -27,10 +26,7 @@ namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Fixt
 			collector.Add(Ad1);
 			collector.Add(Ad2);
 
-			var underTest = new TractOffersCommandHandler(new FlatOffersRepository(dbFixture.Context),
-				new UpdateOffersBasedOnAdvertisementsCommandHandler(),
-				new List<IAdvertisementsCollector> { collector },
-				Log.Logger);
+			var underTest = TrackOfferHandlerFactory.GetInstance(dbFixture.Context, collector);
 
 			underTest.Execute();
 		}

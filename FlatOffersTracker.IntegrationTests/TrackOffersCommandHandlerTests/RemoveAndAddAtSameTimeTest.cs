@@ -1,6 +1,5 @@
 using FlatOffersTracker.Entities;
 using EFRepository.DataAccess.Context;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Xunit;
 

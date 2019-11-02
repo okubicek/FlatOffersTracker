@@ -10,7 +10,7 @@ namespace FlatOffersTracker.Tests
 	public class UnitTest1
 	{
 		[Fact]
-		public void Test1()
+		public async Task Test1()
 		{
 			var host = FlatOffersTrackerBackgroundApp.Program.CreateWebHostBuilder(new string[0]);
 			host.ConfigureServices((hostContext, services) =>
@@ -18,7 +18,9 @@ namespace FlatOffersTracker.Tests
 				services.AddHostedService<FlatOffersTrackerRunner>();
 			});
 
-			host.Build().StartAsync();
+			var buildedHost = host.Build();
+			var service = buildedHost.Services.GetRequiredService<IHostedService>();
+			await service.StartAsync(new CancellationToken());
 		}
 	}
 

@@ -22,6 +22,7 @@ namespace FlatOffersTracker.DependencyInjection.Domain
 				.FromAssemblyContaining<TractOffersCommandHandler>()
 				.BasedOn(typeof(ICommand<,>))
 				.OrBasedOn(typeof(IQuery<,>))
+				.OrBasedOn(typeof(IQuery<>))
 				.WithService
 				.Base()
 				.LifestyleTransient());
