@@ -11,25 +11,30 @@ namespace FlatOffersTracker.Web.Controllers
 {
 	[Route("api/[controller]")]
 	public class FlatOffersController : Controller
-    {
+	{
 		private IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery> _getFlatOffers;
 
-		public FlatOffersController(IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery> getFlatOffers)
+		private IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> _getImages;
+
+		public FlatOffersController(IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery> getFlatOffers,
+			IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> getImages)
 		{
 			_getFlatOffers = getFlatOffers;
+			_getImages = getImages;
 		}
 
 		[HttpGet("[action]")]
 		public IEnumerable<Models.FlatOffer> Get(Models.FlatOffersSearchParams query)
-        {
+		{
 			var offers = _getFlatOffers.Get(new GetFlatOffersQuery {
-				FlatType = query.FlatType != null ? (FlatType?) Enum.Parse(typeof(FlatType), query.FlatType, true) : null,
+				FlatType = query.FlatType != null ? (FlatType?)Enum.Parse(typeof(FlatType), query.FlatType, true) : null,
 				MaxPrice = query.MaxPrice,
 				MinFlatSize = query.MinFlatSize,
 				NumberOfRooms = query.RoomCount
 			});
 
 			return offers.Select(x => new Models.FlatOffer {
+				Id = x.Id.Value,
 				Address = x.Address,
 				NumberOfRooms = x.NumberOfRooms,
 				FlatSize = x.FlatSize,
@@ -37,7 +42,7 @@ namespace FlatOffersTracker.Web.Controllers
 				Price = x.Price,
 				Url = x.Links.First().Url
 			});
-        }
+		}
 
 		[HttpGet("[action]")]
 		public IEnumerable<Models.SelectOption> Definitions(string definitionType)
@@ -53,6 +58,19 @@ namespace FlatOffersTracker.Web.Controllers
 				default:
 					throw new ArgumentException($"Value {definitionType} is not supported definition type");
 			}
-		}		
+		}
+
+		[HttpGet("[action]/{flatOfferId}")]
+		public ActionResult HeaderImage([FromRoute]int flatOfferId)
+		{
+			var image = _getImages.Get(new GetFlatOfferImagesQuery
+			{
+				FlatOfferId = flatOfferId,
+				ReturnHeadImageOnly = true
+			})
+			.Single();
+
+			return File(image, "image/jpg");
+		}
 	}
 }

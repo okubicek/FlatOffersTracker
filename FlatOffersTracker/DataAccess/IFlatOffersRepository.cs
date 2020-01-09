@@ -19,5 +19,7 @@ namespace FlatOffersTracker.DataAccess
 		HashSet<int> GetFlatOfferIdsWithStoredImages();
 
 		void Save(IEnumerable<FlatOffer> offers);
+
+		IEnumerable<byte[]> GetImages(int flatOfferId, bool headOnly);
 	}
 }

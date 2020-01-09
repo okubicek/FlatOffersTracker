@@ -6,6 +6,8 @@ namespace EFRepository.DataAccess.Context
 {
 	public class FlatOffersDbContext : DbContext
 	{
+		public FlatOffersDbContext() { }
+
 		public FlatOffersDbContext(DbContextOptions<FlatOffersDbContext> options) : base(options)
 		{
 		}

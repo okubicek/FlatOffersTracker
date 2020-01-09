@@ -2,6 +2,8 @@
 {
 	public class FlatOffer
 	{
+		public int Id { get; set; }
+
 		public string Address { get; set; }
 
 		public int FlatSize { get; set; }

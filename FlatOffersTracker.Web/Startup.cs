@@ -31,22 +31,19 @@ namespace FlatOffersTracker.Web
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-			var persistenceRepositoryInstaller = new EFCoreRepositoryInstaller();
-
-			persistenceRepositoryInstaller.AddToServiceCollection(services, 
-				Configuration.GetConnectionString("DefaultConnection"));
-
-			Container.Install(persistenceRepositoryInstaller);
+			Container.AddScopedDdContext(Configuration.GetConnectionString("DefaultConnection"));
+			Container.Install(new EFCoreRepositoryInstaller());
 			Container.Install(new FlatOffersTrackerInstaller());
 
 			// In production, the React files will be served from this directory
 			services.AddSpaStaticFiles(configuration =>
 			{
 				configuration.RootPath = "ClientApp/build";
-			});
+			});			
 
 			return services.AddWindsor(Container, opts =>
-				opts.UseEntryAssembly(typeof(FlatOffersController).Assembly));
+				opts.UseEntryAssembly(typeof(FlatOffersController).Assembly),
+				() => services.BuildServiceProvider(validateScopes:true));
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -22,16 +22,16 @@ namespace EFRepository.DataAccess.Repositories
 		{
 			return _dbContext.FlatOffers
 				.Include(x => x.Links)
-				.Include(x => x.Notifications)				
+				.Include(x => x.Notifications)
 				.Where(x => x.DateRemoved == null);
 		}
 
 		public IEnumerable<FlatOffer> Get(
 			FlatType? flatType, 
-			int? minFlatSize, 
-			int? numberOfRooms, 
-			decimal? maxPrice, 
-			DateRange? dateAdded, 
+			int? minFlatSize,
+			int? numberOfRooms,
+			decimal? maxPrice,
+			DateRange? dateAdded,
 			DateRange? dateRemoved)
 		{
 			var query = _dbContext.FlatOffers.AsQueryable();
@@ -66,7 +66,10 @@ namespace EFRepository.DataAccess.Repositories
 				query = query.WhereDateRemovedWithinRange(dateRemoved.Value);
 			}
 
-			return query.Include(x => x.Links).ToList();
+			return query
+				.Include(x => x.Links)
+				.Where(x => x.DateRemoved == null || x.Notifications.Any(y => !y.Viewed))
+				.ToList();
 		}
 
 		public void Save(IEnumerable<FlatOffer> offers)
@@ -89,6 +92,23 @@ namespace EFRepository.DataAccess.Repositories
 				.Select(x => x.FlatOfferId.Value)
 				.Distinct()
 				.ToHashSet();
+		}
+
+		public IEnumerable<byte[]> GetImages(int flatOfferId, bool headOnly)
+		{
+			var query = _dbContext
+				.FlatOffers
+				.Where(x => x.Id == flatOfferId)
+				.SelectMany(x => x.Images);
+
+			if (headOnly)
+			{
+				query = query.Where(x => x.SortOrder == 1);
+			}
+
+			return query
+				.Select(x => x.Content)
+				.ToList();
 		}
 	}
 }

@@ -5,6 +5,7 @@ export class FlatOfferCard extends Component {
         var flatOffer = this.props.flatOffer;
         return (
             <div className="card mt-4">
+                <img className="card-img-top" src={new URL("api/FlatOffers/HeaderImage/" + flatOffer.id, "https://" + window.location.host)} />
                 <div className="card-body">
                     <h5 className="card-title">{flatOffer.address}</h5>
                     <dl className="row">
@@ -17,9 +18,5 @@ export class FlatOfferCard extends Component {
                 </div>
             </div>
         )
-    }
-
-    format(num) {
-        return  
     }
 }

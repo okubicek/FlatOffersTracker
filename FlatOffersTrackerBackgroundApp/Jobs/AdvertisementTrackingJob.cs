@@ -44,14 +44,12 @@ namespace FlatOffersTrackerBackgroundApp.Jobs
 			try
 			{
 				_tracker.Execute();
+				RecordExecutionFinished(started, true);
 			}
 			catch (Exception ex)
 			{
-				_logger.Error(ex, "Offer tracking failed");
-			}
-			finally
-			{
 				RecordExecutionFinished(started, false);
+				_logger.Error(ex, "Offer tracking failed");
 			}
 
 			_logger.Information("Batch execution finished at {Now}", DateTime.Now);
