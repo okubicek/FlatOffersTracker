@@ -42,10 +42,10 @@ namespace FlatOffersTrackerBackgroundApp
 					container.Register(Component.For<IAdvertisementTrackingJob>().ImplementedBy<AdvertisementTrackingJob>().LifestyleTransient());
 					container.Register(Component.For<SqlServerStorageOptions>().Instance(new SqlServerStorageOptions
 					{
-						CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-						QueuePollInterval = TimeSpan.FromTicks(1),
+						CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),						
+						QueuePollInterval = TimeSpan.FromMinutes(5),
 						UseRecommendedIsolationLevel = true,
-						SlidingInvisibilityTimeout = TimeSpan.FromMinutes(1)
+						SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5)
 					}));
 					container.Install(new FlatOffersTrackerInstaller());
 					container.Install(persistencyInstaller);
