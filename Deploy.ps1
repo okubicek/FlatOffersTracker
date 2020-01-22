@@ -1,5 +1,5 @@
 param(
-[string] $sourcePath = 'C:\Users\okubicek\source\repos\FlatOffersTracker\FlatOffersTrackerBackgroundApp\bin\Release\netcoreapp2.2\win-x64\publish\*',
+[string] $sourcePath = 'C:\Users\okubicek\source\repos\FlatOffersTracker\FlatOffersTrackerBackgroundApp\bin\Release\netcoreapp2.2\win-x64\publish',
 [string] $destinationPath = 'C:\Users\okubicek\FlatOfferTracker',
 [string] $taskName = "FlatTracker"
 )
@@ -16,7 +16,8 @@ else{
 	Register-ScheduledTask -TaskName $taskName -InputObject $Task
 }
 
-copy-item -Path C:\Users\okubicek\source\repos\FlatOffersTracker\FlatOffersTrackerBackgroundApp\bin\Release\netcoreapp2.2\win-x64\publish\* -destination C:\temp\test -Force -recurse
+$fullSourcePath = $sourcePath + '\*'
+copy-item -Path $fullSourcePath -destination $destinationPath -Force -recurse
 
 Start-ScheduledTask -TaskName $taskName
 
