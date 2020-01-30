@@ -1,8 +1,11 @@
 param(
-[string] $sourcePath = 'C:\Users\okubicek\source\repos\FlatOffersTracker\FlatOffersTrackerBackgroundApp\bin\Release\netcoreapp2.2\win-x64\publish',
-[string] $destinationPath = 'C:\Users\okubicek\FlatOfferTracker',
-[string] $taskName = "FlatTracker"
+	[string] $publishPath = "C:\Users\okubicek\source\repos\FlatOffersTracker\FlatOffersTrackerBackgroundApp\",
+	[string] $destinationPath = "C:\Users\okubicek\FlatOfferTracker",
+	[string] $taskName = "FlatTracker"
 )
+
+$projectName = "FlatOffersTrackerBackgroundApp.csproj"
+$publishPathSuffix = "bin\Release\publish"
 
 get-scheduledtask -TaskName $taskName -ErrorAction SilentlyContinue -OutVariable task
 if ($task){
@@ -16,8 +19,12 @@ else{
 	Register-ScheduledTask -TaskName $taskName -InputObject $Task
 }
 
-$fullSourcePath = $sourcePath + '\*'
-copy-item -Path $fullSourcePath -destination $destinationPath -Force -recurse
+$projectPath = $publishPath + $projectName
+$publishApplicationPath = $publishPath + $publishPathSuffix
+Remove-Item "$publishApplicationPath\*" -Recurse -ErrorAction Ignore
+
+& dotnet publish $projectPath -c Release -r win-x64 -o $publishApplicationPath --self-contained true
+
+copy-item -Path "$publishApplicationPath\*" -destination $destinationPath -Force -recurse
 
 Start-ScheduledTask -TaskName $taskName
-
