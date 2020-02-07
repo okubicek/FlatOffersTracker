@@ -1,4 +1,5 @@
 ﻿using Common.Cqrs;
+using Common.Extensions;
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
 using FlatOffersTracker.Web.Helpers;
@@ -27,7 +28,7 @@ namespace FlatOffersTracker.Web.Controllers
 		public IEnumerable<Models.FlatOffer> Get(Models.FlatOffersSearchParams query)
 		{
 			var offers = _getFlatOffers.Get(new GetFlatOffersQuery {
-				FlatType = query.FlatType != null ? (FlatType?)Enum.Parse(typeof(FlatType), query.FlatType, true) : null,
+				FlatType = query.FlatType?.ToEnum<FlatType>(),
 				MaxPrice = query.MaxPrice,
 				MinFlatSize = query.MinFlatSize,
 				NumberOfRooms = query.RoomCount

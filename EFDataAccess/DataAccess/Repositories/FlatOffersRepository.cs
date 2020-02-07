@@ -58,12 +58,12 @@ namespace EFRepository.DataAccess.Repositories
 
 			if (dateAdded.HasValue)
 			{
-				query = query.WhereDateAddedWithinRange(dateAdded.Value);
+				query = query.WhereDateWithinRange(x => x.DateAdded, dateAdded.Value);
 			}
 
 			if (dateRemoved.HasValue)
 			{
-				query = query.WhereDateRemovedWithinRange(dateRemoved.Value);
+				query = query.WhereDateWithinRange(x => x.DateRemoved, dateRemoved.Value);
 			}
 
 			return query
