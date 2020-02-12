@@ -2,6 +2,8 @@ import React, { Component, Fragment} from 'react';
 import { FlatOffersOverview } from './FlatOffersOverview';
 import { SearchPane } from './SearchPane';
 
+import './home.css';
+
 export class Home extends Component {
     constructor(props) {
         super(props);
