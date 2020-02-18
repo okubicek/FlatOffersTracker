@@ -1,6 +1,7 @@
 import React, { Component, Fragment} from 'react';
 import { FlatOffersOverview } from './FlatOffersOverview';
 import { SearchPane } from './SearchPane';
+import { SlidePane } from './SlidePane';
 
 import './home.css';
 
@@ -34,8 +35,9 @@ export class Home extends Component {
         return (
             <React.Fragment>
                 <div className="container fluid">
-                    <SearchPane
-                        handleSearch={this.fetchFlatOffers} />
+                    <SlidePane label='Search'>
+                        <SearchPane handleSearch={this.fetchFlatOffers} />
+                    </SlidePane>
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}
                         loading={this.state.loading} />

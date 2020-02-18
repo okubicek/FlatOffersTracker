@@ -2,6 +2,7 @@
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
+import "./react-datepicker.css";
 
 export class DateBox extends Component {
     constructor(props) {

@@ -61,53 +61,55 @@ export class SearchPane extends Component {
 
     render() {
         return (
-            <div className = "row" >
-                <div className="card">
-                    <div className="card-header">Search</div>
-                    <div className="card-body">
-                        <div className="row">
-                            <div className="col col-sm-6">       
-                                <NumericBox label="Min Flat Size"
-                                    name="minFlatSize"
-                                    value={this.state.searchParams.minFlatSize}
-                                    onChange={this.handleParamsChange}
-                                />
-                                <SelectBox
-                                    label="Number of Rooms"
-                                    name="roomCount"
-                                    value={this.state.searchParams.roomCount}
-                                    onChange={this.handleParamsChange}
-                                    options={this.state.roomCountOptions}
-                                />
-                                <NumericBox label="Max Price"
-                                    name="maxPrice"
-                                    value={this.state.searchParams.maxPrice}
-                                    onChange={this.handleParamsChange}
-                                />
-                            </div>
-                            <div className="col col-sm-6">
-                                <SelectBox
-                                    label="Flat Type"
-                                    name="flatType"
-                                    value={this.state.searchParams.flatType}
-                                    onChange={this.handleParamsChange}
-                                    options={this.state.flatTypeOptions}
-                                />
-                                <DateBox
-                                    label="Start Date"
-                                    value={this.state.searchParams.startDate}
-                                    onChange={this.handleParamsChange}
-                                    name="startDate"
-                                />
-                                <DateBox
-                                    label="End Date"
-                                    value={this.state.searchParams.endDate}
-                                    onChange={this.handleParamsChange}
-                                    name="endDate"
-                                />
-                                <button type="submit"
-                                    className="form-control btn-primary"
-                                    onClick={this.handleSearch}>Search</button>
+            <div className="row">
+                <div className="col">
+                    <div className="card">
+                        <div className="card-header">Search</div>
+                        <div className="card-body">
+                            <div className="row">
+                                <div className="col col-sm-6">       
+                                    <NumericBox label="Min Flat Size"
+                                        name="minFlatSize"
+                                        value={this.state.searchParams.minFlatSize}
+                                        onChange={this.handleParamsChange}
+                                    />
+                                    <SelectBox
+                                        label="Number of Rooms"
+                                        name="roomCount"
+                                        value={this.state.searchParams.roomCount}
+                                        onChange={this.handleParamsChange}
+                                        options={this.state.roomCountOptions}
+                                    />
+                                    <NumericBox label="Max Price"
+                                        name="maxPrice"
+                                        value={this.state.searchParams.maxPrice}
+                                        onChange={this.handleParamsChange}
+                                    />
+                                </div>
+                                <div className="col col-sm-6">
+                                    <SelectBox
+                                        label="Flat Type"
+                                        name="flatType"
+                                        value={this.state.searchParams.flatType}
+                                        onChange={this.handleParamsChange}
+                                        options={this.state.flatTypeOptions}
+                                    />
+                                    <DateBox
+                                        label="Start Date"
+                                        value={this.state.searchParams.startDate}
+                                        onChange={this.handleParamsChange}
+                                        name="startDate"
+                                    />
+                                    <DateBox
+                                        label="End Date"
+                                        value={this.state.searchParams.endDate}
+                                        onChange={this.handleParamsChange}
+                                        name="endDate"
+                                    />
+                                    <button type="submit"
+                                        className="form-control btn-primary"
+                                        onClick={this.handleSearch}>Search</button>
+                                </div>
                             </div>
                         </div>
                     </div>
