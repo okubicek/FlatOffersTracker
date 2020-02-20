@@ -32,7 +32,8 @@ namespace EFRepository.DataAccess.Repositories
 			int? numberOfRooms,
 			decimal? maxPrice,
 			DateRange? dateAdded,
-			DateRange? dateRemoved)
+			DateRange? dateRemoved,
+			Pagination pagination)
 		{
 			var query = _dbContext.FlatOffers.AsQueryable();
 
@@ -69,6 +70,7 @@ namespace EFRepository.DataAccess.Repositories
 			return query
 				.Include(x => x.Links)
 				.Where(x => x.DateRemoved == null || x.Notifications.Any(y => !y.Viewed))
+				.Paginate(pagination)
 				.ToList();
 		}
 

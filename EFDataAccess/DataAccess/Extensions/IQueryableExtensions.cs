@@ -31,6 +31,13 @@ namespace EFRepository.DataAccess.Extensions
 			return query.Where(GetExpression(endDateExp, pexp));
 		}
 
+		public static IQueryable<T> Paginate<T>(this IQueryable<T> query, Pagination pagination)
+		{
+			var toSkip = (pagination.Page - 1) * pagination.PageSize;
+
+			return query.Skip(toSkip).Take(pagination.PageSize);
+		}
+
 		private static UnaryExpression ValueExpression(DateTime? date, MemberExpression memExp)
 		{
 			return Expression.Convert(Expression.Constant(date.Value), memExp.Type);

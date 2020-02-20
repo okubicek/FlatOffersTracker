@@ -11,21 +11,46 @@ export class Home extends Component {
 
         this.fetchFlatOffers = this.fetchFlatOffers.bind(this);
 
-        this.state = { flatOffers: [], loading: true };
-        this.fetchFlatOffers(null);
+        this.state = {
+            flatOffers: [], loading: false, pageSize: 18, pageNumber: 1, searchParams: null
+        };
+
+        this.fetchFlatOffers();
     }
 
-    fetchFlatOffers(searchParams) {
+    handleSearch(searchParams) {
+        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1 });
+        this.fetchFlatOffers();
+    }
+
+    handleShowMore() {
+        this.setState({ pageNumber: this.state.pageNumber + 1 });
+
+        this.fetchFlatOffers();
+    }
+
+    fetchFlatOffers() {
+        if (this.state.loading == true) {
+            return;
+        }
+
+        this.setState({ loading: true });
+
         var url = new URL("api/FlatOffers/Get", "https://" + window.location.host);
 
+        var searchParams = this.state.searchParams;
         if (searchParams != null) {
             Object.keys(searchParams).forEach(key => url.searchParams.append(key, searchParams[key]));
         }
 
+        url.searchParams.append('pageNumber', this.state.pageNumber)
+        url.searchParams.append('pageSize', this.state.pageSize)
+
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                this.setState({ flatOffers: data, loading: false })
+                var offers = this.state.flatOffers.concat(data);
+                this.setState({ flatOffers: offers, loading: false, pageNumber: this.state.pageNumber})
             });
     }
 
@@ -36,11 +61,12 @@ export class Home extends Component {
             <React.Fragment>
                 <div className="container fluid">
                     <SlidePane label='Search'>
-                        <SearchPane handleSearch={this.fetchFlatOffers} />
+                        <SearchPane handleSearch={this.handleSearch.bind(this)} />
                     </SlidePane>
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}
                         loading={this.state.loading} />
+                    <button className="btn btn-primary" onClick={this.handleShowMore.bind(this)}>Show More</button>
                 </div>
             </React.Fragment>
         );

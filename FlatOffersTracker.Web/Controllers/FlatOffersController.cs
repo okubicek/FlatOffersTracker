@@ -31,7 +31,8 @@ namespace FlatOffersTracker.Web.Controllers
 				FlatType = query.FlatType?.ToEnum<FlatType>(),
 				MaxPrice = query.MaxPrice,
 				MinFlatSize = query.MinFlatSize,
-				NumberOfRooms = query.RoomCount
+				NumberOfRooms = query.RoomCount,
+				Pagination = new Common.ValueTypes.Pagination(query.PageNumber, query.PageSize)
 			});
 
 			return offers.Select(x => new Models.FlatOffer {

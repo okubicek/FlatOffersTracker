@@ -14,7 +14,8 @@ namespace FlatOffersTracker.DataAccess
 			int? numberOfRooms,
 			decimal? maxPrice,
 			DateRange? dateAdded,
-			DateRange? dateRemoved);
+			DateRange? dateRemoved,
+			Pagination pagination);
 
 		HashSet<int> GetFlatOfferIdsWithStoredImages();
 

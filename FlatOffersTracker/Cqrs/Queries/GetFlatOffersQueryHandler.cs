@@ -19,10 +19,11 @@ namespace FlatOffersTracker.Cqrs.Queries
 			return _repository.Get(
 				query.FlatType,
 				query.MinFlatSize,
-				query.NumberOfRooms, 
+				query.NumberOfRooms,
 				query.MaxPrice,
 				query.DateAdded,
-				query.DateRemoved
+				query.DateRemoved,
+				query.Pagination
 			);
 		}
 	}
