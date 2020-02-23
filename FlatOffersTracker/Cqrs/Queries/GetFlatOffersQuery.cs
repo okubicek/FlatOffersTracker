@@ -17,6 +17,6 @@ namespace FlatOffersTracker.Cqrs.Queries
 
 		public DateRange? DateRemoved { get; set; }
 
-		public Pagination Pagination { get; set; }
+		public QueryPagination Pagination { get; set; }
 	}
 }

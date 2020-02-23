@@ -1,4 +1,5 @@
-﻿using Common.ValueTypes;
+﻿using Common.Pagination;
+using Common.ValueTypes;
 using FlatOffersTracker.Entities;
 using System;
 using System.Linq;
@@ -31,11 +32,21 @@ namespace EFRepository.DataAccess.Extensions
 			return query.Where(GetExpression(endDateExp, pexp));
 		}
 
-		public static IQueryable<T> Paginate<T>(this IQueryable<T> query, Pagination pagination)
+		public static PaginatedResult<T> ToPaginated<T>(this IQueryable<T> query, QueryPagination pagination)
 		{
 			var toSkip = (pagination.Page - 1) * pagination.PageSize;
 
-			return query.Skip(toSkip).Take(pagination.PageSize);
+			var res = query.Select(x => new { Count = query.Count(), Entity = x })
+				.Skip(toSkip)
+				.Take(pagination.PageSize)
+				.ToList();
+
+			return new PaginatedResult<T>(
+					res.Any() ? res.First().Count : 0,
+					pagination.Page,
+					pagination.PageSize,
+					res.Select(x => x.Entity).ToList()
+				);
 		}
 
 		private static UnaryExpression ValueExpression(DateTime? date, MemberExpression memExp)

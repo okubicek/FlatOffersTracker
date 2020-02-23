@@ -1,4 +1,5 @@
-﻿using Common.ValueTypes;
+﻿using Common.Pagination;
+using Common.ValueTypes;
 using FlatOffersTracker.Entities;
 using System.Collections.Generic;
 
@@ -8,14 +9,14 @@ namespace FlatOffersTracker.DataAccess
 	{
 		IEnumerable<FlatOffer> GetOpenFlatOffers();
 
-		IEnumerable<FlatOffer> Get(
+		PaginatedResult<FlatOffer> Get(
 			FlatType? flatType,
 			int? minFlatSize,
 			int? numberOfRooms,
 			decimal? maxPrice,
 			DateRange? dateAdded,
 			DateRange? dateRemoved,
-			Pagination pagination);
+			QueryPagination pagination);
 
 		HashSet<int> GetFlatOfferIdsWithStoredImages();
 

@@ -6,6 +6,7 @@ using FlatOffersTracker.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Common.ValueTypes;
 using EFRepository.DataAccess.Extensions;
+using Common.Pagination;
 
 namespace EFRepository.DataAccess.Repositories
 {
@@ -26,14 +27,14 @@ namespace EFRepository.DataAccess.Repositories
 				.Where(x => x.DateRemoved == null);
 		}
 
-		public IEnumerable<FlatOffer> Get(
+		public PaginatedResult<FlatOffer> Get(
 			FlatType? flatType, 
 			int? minFlatSize,
 			int? numberOfRooms,
 			decimal? maxPrice,
 			DateRange? dateAdded,
 			DateRange? dateRemoved,
-			Pagination pagination)
+			QueryPagination pagination)
 		{
 			var query = _dbContext.FlatOffers.AsQueryable();
 
@@ -70,8 +71,7 @@ namespace EFRepository.DataAccess.Repositories
 			return query
 				.Include(x => x.Links)
 				.Where(x => x.DateRemoved == null || x.Notifications.Any(y => !y.Viewed))
-				.Paginate(pagination)
-				.ToList();
+				.ToPaginated(pagination);
 		}
 
 		public void Save(IEnumerable<FlatOffer> offers)

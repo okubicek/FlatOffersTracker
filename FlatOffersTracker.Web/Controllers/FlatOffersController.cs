@@ -1,5 +1,6 @@
 ﻿using Common.Cqrs;
 using Common.Extensions;
+using Common.Pagination;
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
 using FlatOffersTracker.Web.Helpers;
@@ -13,11 +14,11 @@ namespace FlatOffersTracker.Web.Controllers
 	[Route("api/[controller]")]
 	public class FlatOffersController : Controller
 	{
-		private IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery> _getFlatOffers;
+		private IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery> _getFlatOffers;
 
 		private IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> _getImages;
 
-		public FlatOffersController(IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery> getFlatOffers,
+		public FlatOffersController(IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery> getFlatOffers,
 			IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> getImages)
 		{
 			_getFlatOffers = getFlatOffers;
@@ -25,25 +26,33 @@ namespace FlatOffersTracker.Web.Controllers
 		}
 
 		[HttpGet("[action]")]
-		public IEnumerable<Models.FlatOffer> Get(Models.FlatOffersSearchParams query)
+		public Models.PaginatedCollection<Models.FlatOffer> Get(Models.FlatOffersSearchParams query)
 		{
 			var offers = _getFlatOffers.Get(new GetFlatOffersQuery {
 				FlatType = query.FlatType?.ToEnum<FlatType>(),
 				MaxPrice = query.MaxPrice,
 				MinFlatSize = query.MinFlatSize,
 				NumberOfRooms = query.RoomCount,
-				Pagination = new Common.ValueTypes.Pagination(query.PageNumber, query.PageSize)
+				Pagination = new Common.ValueTypes.QueryPagination(query.PageNumber, query.PageSize)
 			});
 
-			return offers.Select(x => new Models.FlatOffer {
-				Id = x.Id.Value,
-				Address = x.Address,
-				NumberOfRooms = x.NumberOfRooms,
-				FlatSize = x.FlatSize,
-				FlatType = x.FlatType.ToString(),
-				Price = x.Price,
-				Url = x.Links.First().Url
-			});
+			return new Models.PaginatedCollection<Models.FlatOffer>
+			{
+				Results = offers.Results.Select(x => new Models.FlatOffer
+				{
+					Id = x.Id.Value,
+					Address = x.Address,
+					NumberOfRooms = x.NumberOfRooms,
+					FlatSize = x.FlatSize,
+					FlatType = x.FlatType.ToString(),
+					Price = x.Price,
+					Url = x.Links.First().Url
+				}),
+				PageNumber = offers.PageNumber,
+				PageCount = offers.TotalRowCount % offers.PageSize == 0 ? 
+							offers.TotalRowCount / offers.PageSize : 
+							(offers.TotalRowCount / offers.PageSize) + 1
+			};
 		}
 
 		[HttpGet("[action]")]

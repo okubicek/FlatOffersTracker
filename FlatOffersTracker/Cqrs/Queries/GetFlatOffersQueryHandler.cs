@@ -1,11 +1,11 @@
 ﻿using Common.Cqrs;
+using Common.Pagination;
 using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Entities;
-using System.Collections.Generic;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetFlatOffersQueryHandler : IQuery<IEnumerable<FlatOffer>, GetFlatOffersQuery>
+	public class GetFlatOffersQueryHandler : IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery>
 	{
 		private IFlatOffersRepository _repository;
 
@@ -14,7 +14,7 @@ namespace FlatOffersTracker.Cqrs.Queries
 			_repository = repository;
 		}
 
-		public IEnumerable<FlatOffer> Get(GetFlatOffersQuery query)
+		public PaginatedResult<FlatOffer> Get(GetFlatOffersQuery query)
 		{
 			return _repository.Get(
 				query.FlatType,

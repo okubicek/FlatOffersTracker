@@ -19,7 +19,7 @@ export class Home extends Component {
     }
 
     handleSearch(searchParams) {
-        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1 });
+        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1, isLastPage : false });
         this.fetchFlatOffers();
     }
 
@@ -49,8 +49,13 @@ export class Home extends Component {
         fetch(url)
             .then(response => response.json())
             .then(data => {
-                var offers = this.state.flatOffers.concat(data);
-                this.setState({ flatOffers: offers, loading: false, pageNumber: this.state.pageNumber})
+                var offers = this.state.flatOffers.concat(data.results);
+                var isLastPage = this.state.pageNumber == data.pageCount;
+                this.setState({
+                    flatOffers: offers, loading: false,
+                    pageNumber: this.state.pageNumber,
+                    isLastPage: isLastPage
+                })
             });
     }
 
@@ -66,7 +71,14 @@ export class Home extends Component {
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}
                         loading={this.state.loading} />
-                    <button className="btn btn-primary" onClick={this.handleShowMore.bind(this)}>Show More</button>
+                    <div className="row mt-4 text-center">
+                        <div className="col">
+                            {!this.state.isLastPage
+                                ? <button className="btn btn-primary" onClick={this.handleShowMore.bind(this)}>Show More</button>
+                                : null
+                            }
+                        </div>
+                    </div>
                 </div>
             </React.Fragment>
         );

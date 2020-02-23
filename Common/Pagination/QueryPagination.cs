@@ -2,9 +2,9 @@
 
 namespace Common.ValueTypes
 {
-	public class Pagination
+	public struct QueryPagination
 	{
-		public Pagination(int page, int pageSize)
+		public QueryPagination(int page, int pageSize)
 		{
 			if (page < 1) throw new ArgumentException("Page number can't be less than 0");
 
