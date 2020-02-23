@@ -46,6 +46,7 @@ namespace FlatOffersTracker.Web.Controllers
 					FlatSize = x.FlatSize,
 					FlatType = x.FlatType.ToString(),
 					Price = x.Price,
+					NotificationType = NotificationResolver.ResolveNotification(x.Notifications),
 					Url = x.Links.First().Url
 				}),
 				PageNumber = offers.PageNumber,
@@ -63,7 +64,7 @@ namespace FlatOffersTracker.Web.Controllers
 			switch (defType)
 			{
 				case Models.DefinitionTypes.FlatType:
-					return EnumHelper.ConvertEnumtToSelectList<FlatType>();
+					return EnumHelper.ConvertEnumToSelectList<FlatType>();
 				case Models.DefinitionTypes.NumberOfRooms:
 					return new List<Models.SelectOption> { new Models.SelectOption(1, "2"), new Models.SelectOption(2, "3") };
 				default:

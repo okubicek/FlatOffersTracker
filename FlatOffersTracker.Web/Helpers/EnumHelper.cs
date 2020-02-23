@@ -7,7 +7,7 @@ namespace FlatOffersTracker.Web.Helpers
 {
 	public class EnumHelper
 	{
-		public static IEnumerable<Models.SelectOption> ConvertEnumtToSelectList<T>() where T : IConvertible
+		public static IEnumerable<Models.SelectOption> ConvertEnumToSelectList<T>() where T : IConvertible
 		{
 			if (!typeof(T).IsEnum)
 			{

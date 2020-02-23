@@ -70,6 +70,7 @@ namespace EFRepository.DataAccess.Repositories
 
 			return query
 				.Include(x => x.Links)
+				.Include(x => x.Notifications)
 				.Where(x => x.DateRemoved == null || x.Notifications.Any(y => !y.Viewed))
 				.ToPaginated(pagination);
 		}

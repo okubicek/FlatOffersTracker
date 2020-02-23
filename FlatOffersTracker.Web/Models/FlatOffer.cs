@@ -15,5 +15,7 @@
 		public string Url { get; set; }
 
 		public decimal Price { get; set; }
+
+		public string NotificationType { get; set; }
 	}
 }
