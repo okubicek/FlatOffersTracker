@@ -19,5 +19,15 @@ namespace Common.Pagination
 		public int PageSize { get; private set; }
 
 		public IList<T> Results { get; private set; }
+
+		public int PageCount 
+		{ 
+			get
+			{
+				return TotalRowCount % PageSize == 0 ?
+							TotalRowCount / PageSize :
+							(TotalRowCount / PageSize) + 1;
+			} 
+		}
 	}
 }

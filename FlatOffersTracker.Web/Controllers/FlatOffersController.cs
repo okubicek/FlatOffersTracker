@@ -50,9 +50,7 @@ namespace FlatOffersTracker.Web.Controllers
 					Url = x.Links.First().Url
 				}),
 				PageNumber = offers.PageNumber,
-				PageCount = offers.TotalRowCount % offers.PageSize == 0 ? 
-							offers.TotalRowCount / offers.PageSize : 
-							(offers.TotalRowCount / offers.PageSize) + 1
+				PageCount = offers.PageCount
 			};
 		}
 
