@@ -19,14 +19,13 @@ export class Home extends Component {
     }
 
     handleSearch(searchParams) {
-        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1, isLastPage : false });
-        this.fetchFlatOffers();
+        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1, isLastPage: false },
+            () => this.fetchFlatOffers());
     }
 
     handleShowMore() {
-        this.setState({ pageNumber: this.state.pageNumber + 1 });
-
-        this.fetchFlatOffers();
+        this.setState({ pageNumber: this.state.pageNumber + 1 },
+            () => this.fetchFlatOffers());
     }
 
     fetchFlatOffers() {
