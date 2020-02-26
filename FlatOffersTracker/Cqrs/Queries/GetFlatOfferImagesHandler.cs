@@ -4,7 +4,11 @@ using System.Collections.Generic;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetFlatOfferImagesHandler : IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery>
+	public interface IGetFlatOfferImagesHandler : IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery>
+	{
+	}
+
+	public class GetFlatOfferImagesHandler : IGetFlatOfferImagesHandler
 	{
 		private IFlatOffersRepository _repository;
 

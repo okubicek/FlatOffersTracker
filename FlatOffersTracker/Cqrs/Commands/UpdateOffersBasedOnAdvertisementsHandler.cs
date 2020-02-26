@@ -6,21 +6,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FlatOffersTracker
+namespace FlatOffersTracker.Cqrs.Commands
 {
-	public class UpdateOffersBasedOnAdvertisementsCommandHandler
+	public interface IUpdateOffersBasedOnAdvertisementsHandler 
 		: ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand>
 	{
-		private IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery> _getImages;
+	}
 
-		private IQuery<FlatOffersWithImage> _getFlatOffersWithImage;
+	public class UpdateOffersBasedOnAdvertisementsHandler
+		: IUpdateOffersBasedOnAdvertisementsHandler
+	{
+		private IGetImagesByUrlHandler _getImages;
 
-		public UpdateOffersBasedOnAdvertisementsCommandHandler(
-			IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery> getImages, 
-			IQuery<FlatOffersWithImage> getFlatOffersWithImage)
+		public UpdateOffersBasedOnAdvertisementsHandler(
+			IGetImagesByUrlHandler getImages)
 		{
 			_getImages = getImages;
-			_getFlatOffersWithImage = getFlatOffersWithImage;
 		}
 
 		public IEnumerable<FlatOffer> Execute(UpdateOffersBasedOnAdvertisementsCommand command)
@@ -37,17 +38,6 @@ namespace FlatOffersTracker
 
 		private void ProcessOffersMatchedToAds(List<(FlatOffer offer, Advertisement ad)> matches)
 		{
-			var offersWithImagesStored = _getFlatOffersWithImage.Get();
-
-			var imageDownloadRequest = new GetImagesByUrlQuery
-			{
-				Requests = matches
-					.Where(x => !offersWithImagesStored.HasImages(x.offer.Id.Value))
-					.Select(x => (x.ad.UniqueId, x.ad.ImagesUrl))
-			};
-
-			var downloadedImages = _getImages.Get(imageDownloadRequest);
-
 			foreach (var match in matches)
 			{
 				var offer = match.offer;
@@ -58,8 +48,6 @@ namespace FlatOffersTracker
 					offer.Price = ad.Price;
 					offer.AddNotification(NotificationType.PriceChanged);
 				}
-
-				FillerOfferImages(match.ad.UniqueId, downloadedImages, offer);
 			}
 		}
 
@@ -103,7 +91,7 @@ namespace FlatOffersTracker
 				else
 				{
 					offer.AddNotification(NotificationType.OfferAdded);
-					FillerOfferImages(ad.UniqueId, downloadedImages, offer);
+					FillOfferImages(ad.UniqueId, downloadedImages, offer);
 					newOffers.Add(offer);
 				}
 
@@ -122,7 +110,7 @@ namespace FlatOffersTracker
 			return offers;
 		}
 
-		private static void FillerOfferImages(long adId, Dictionary<long, List<byte[]>> downloadedImages, FlatOffer offer)
+		private static void FillOfferImages(long adId, Dictionary<long, List<byte[]>> downloadedImages, FlatOffer offer)
 		{
 			if (downloadedImages.TryGetValue(adId, out var images))
 			{

@@ -1,11 +1,14 @@
 ﻿using Common.Cqrs;
 using FlatOffersTracker.DataAccess;
 using FlatOffersTracker.Entities;
-using System.Collections.Generic;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetImagesPerOfferHandler : IQuery<FlatOffersWithImage>
+	public interface IGetImagesPerOfferHandler : IQuery<FlatOffersWithImage>
+	{
+	}
+
+	public class GetImagesPerOfferHandler : IGetImagesPerOfferHandler
 	{
 		IFlatOffersRepository _repo;
 

@@ -5,11 +5,15 @@ using FlatOffersTracker.Entities;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetFlatOffersQueryHandler : IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery>
+	public interface IGetFlatOffersHandler : IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery>
+	{
+	}
+
+	public class GetFlatOffersHandler : IGetFlatOffersHandler
 	{
 		private IFlatOffersRepository _repository;
 
-		public GetFlatOffersQueryHandler(IFlatOffersRepository repository)
+		public GetFlatOffersHandler(IFlatOffersRepository repository)
 		{
 			_repository = repository;
 		}

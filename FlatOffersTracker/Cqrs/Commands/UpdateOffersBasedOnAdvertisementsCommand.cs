@@ -1,7 +1,7 @@
 ﻿using FlatOffersTracker.Entities;
 using System.Collections.Generic;
 
-namespace FlatOffersTracker
+namespace FlatOffersTracker.Cqrs.Commands
 {
 	public class UpdateOffersBasedOnAdvertisementsCommand
 	{

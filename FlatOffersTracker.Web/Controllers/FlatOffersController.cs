@@ -1,6 +1,4 @@
-﻿using Common.Cqrs;
-using Common.Extensions;
-using Common.Pagination;
+﻿using Common.Extensions;
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
 using FlatOffersTracker.Web.Helpers;
@@ -14,12 +12,12 @@ namespace FlatOffersTracker.Web.Controllers
 	[Route("api/[controller]")]
 	public class FlatOffersController : Controller
 	{
-		private IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery> _getFlatOffers;
+		private IGetFlatOffersHandler _getFlatOffers;
 
-		private IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> _getImages;
+		private IGetFlatOfferImagesHandler _getImages;
 
-		public FlatOffersController(IQuery<PaginatedResult<FlatOffer>, GetFlatOffersQuery> getFlatOffers,
-			IQuery<IEnumerable<byte[]>, GetFlatOfferImagesQuery> getImages)
+		public FlatOffersController(IGetFlatOffersHandler getFlatOffers,
+			IGetFlatOfferImagesHandler getImages)
 		{
 			_getFlatOffers = getFlatOffers;
 			_getImages = getImages;

@@ -5,7 +5,11 @@ using System.Linq;
 
 namespace FlatOffersTracker.Cqrs.Queries
 {
-	public class GetImagesByUrlHandler : IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery>
+	public interface IGetImagesByUrlHandler : IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery>
+	{
+	}
+
+	public class GetImagesByUrlHandler : IGetImagesByUrlHandler
 	{		
 		public Dictionary<long, List<byte[]>> Get(GetImagesByUrlQuery query)
 		{

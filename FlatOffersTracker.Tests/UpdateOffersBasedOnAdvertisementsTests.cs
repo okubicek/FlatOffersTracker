@@ -1,4 +1,5 @@
 ﻿using Common.Cqrs;
+using FlatOffersTracker.Cqrs.Commands;
 using FlatOffersTracker.Cqrs.Queries;
 using FlatOffersTracker.Entities;
 using Moq;
@@ -19,14 +20,11 @@ namespace FlatOffersTracker.Tests
 		public UpdateOffersBasedOnAdvertisementsTestsBase()
 		{
 			SetupTestObjects();
-
-			var flatOffersWithImageMock = new Mock<IQuery<FlatOffersWithImage>>();
-			flatOffersWithImageMock.Setup(x => x.Get()).Returns(new FlatOffersWithImage(new HashSet<int> { 1, 2 }));
-
-			var imageDownloaderMock = new Mock<IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery>>();
+			
+			var imageDownloaderMock = new Mock<IGetImagesByUrlHandler>();
 			imageDownloaderMock.Setup(x => x.Get(It.IsAny<GetImagesByUrlQuery>())).Returns(new Dictionary<long, List<byte[]>>());
 
-			var _update = new UpdateOffersBasedOnAdvertisementsCommandHandler(imageDownloaderMock.Object, flatOffersWithImageMock.Object);
+			var _update = new UpdateOffersBasedOnAdvertisementsHandler(imageDownloaderMock.Object);
 
 			Result = _update.Execute(new UpdateOffersBasedOnAdvertisementsCommand
 			{

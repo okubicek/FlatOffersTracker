@@ -3,6 +3,7 @@ using Castle.MicroKernel.Resolvers.SpecializedResolvers;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 using Common.Cqrs;
+using FlatOffersTracker.Cqrs.Commands;
 using FlatOffersTracker.Parsing;
 
 namespace FlatOffersTracker.DependencyInjection.Domain
@@ -15,20 +16,20 @@ namespace FlatOffersTracker.DependencyInjection.Domain
 
 			container.Register(Component
 				.For<ICommand>()
-				.ImplementedBy<TractOffersCommandHandler>()
+				.ImplementedBy<TractOffersHandler>()
 				.LifestyleTransient());
 
 			container.Register(Classes
-				.FromAssemblyContaining<TractOffersCommandHandler>()
+				.FromAssemblyContaining<TractOffersHandler>()
 				.BasedOn(typeof(ICommand<,>))
 				.OrBasedOn(typeof(IQuery<,>))
 				.OrBasedOn(typeof(IQuery<>))
 				.WithService
-				.Base()
+				.AllInterfaces()
 				.LifestyleTransient());
 
 			container.Register(Classes
-				.FromAssemblyContaining<TractOffersCommandHandler>()
+				.FromAssemblyContaining<TractOffersHandler>()
 				.BasedOn<IAdvertisementsCollector>()
 				.WithService.FromInterface());
 		}

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Stubs
 {
-	public class GetImageByUrlStub : IQuery<Dictionary<long, List<byte[]>>, GetImagesByUrlQuery>
+	public class GetImageByUrlStub : IGetImagesByUrlHandler
 	{
 		public Dictionary<long, List<byte[]>> Get(GetImagesByUrlQuery query)
 		{

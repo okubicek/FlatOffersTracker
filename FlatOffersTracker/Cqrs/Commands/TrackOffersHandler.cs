@@ -6,20 +6,20 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 
-namespace FlatOffersTracker
+namespace FlatOffersTracker.Cqrs.Commands
 {
-	public class TractOffersCommandHandler : ICommand
+	public class TractOffersHandler : ICommand
 	{
 		private IFlatOffersRepository _flatOffersRepository;
 
-		private ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand> _updateOffers;
+		private IUpdateOffersBasedOnAdvertisementsHandler _updateOffers;
 
 		private IEnumerable<IAdvertisementsCollector> _advertisementsCollectors;
 
 		private ILogger _logger;
 
-		public TractOffersCommandHandler(IFlatOffersRepository flatOffersRepository,
-			ICommand<IEnumerable<FlatOffer>, UpdateOffersBasedOnAdvertisementsCommand> updateOffers,
+		public TractOffersHandler(IFlatOffersRepository flatOffersRepository,
+			IUpdateOffersBasedOnAdvertisementsHandler updateOffers,
 			IEnumerable<IAdvertisementsCollector> advertisementsCollectors, 
 			ILogger logger)
 		{
