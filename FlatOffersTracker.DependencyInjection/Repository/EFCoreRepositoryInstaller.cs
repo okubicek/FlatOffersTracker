@@ -17,6 +17,11 @@ namespace FlatOffersTracker.DependencyInjection.Repository
 				.For<IFlatOffersRepository>()
 				.ImplementedBy<FlatOffersRepository>()
 				.LifestyleTransient());
+			
+			container.Register(Component
+				.For<INotificationRepository>()
+				.ImplementedBy<NotificationRepository>()
+				.LifestyleTransient());			
 
 			container.Register(Component
 				.For<IExecutionHistoryRepository>()

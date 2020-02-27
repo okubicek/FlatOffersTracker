@@ -22,6 +22,7 @@ namespace FlatOffersTracker.DependencyInjection.Domain
 			container.Register(Classes
 				.FromAssemblyContaining<TractOffersHandler>()
 				.BasedOn(typeof(ICommand<,>))
+				.OrBasedOn(typeof(ICommand<>))
 				.OrBasedOn(typeof(IQuery<,>))
 				.OrBasedOn(typeof(IQuery<>))
 				.WithService

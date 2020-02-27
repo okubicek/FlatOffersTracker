@@ -9,4 +9,9 @@
 	{
 		TReturn Execute(TParam command);
 	}
+
+	public interface ICommand<TParam>
+	{
+		void Execute(TParam command);
+	}
 }
