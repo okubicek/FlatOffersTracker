@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Factories;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Fixtures
-{
+{	
 	public class AddNewOffersTestFixture
 	{
 		public AddNewOffersTestFixture(FlatOffersDbContextFixture dbFixture)

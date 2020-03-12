@@ -30,7 +30,7 @@ namespace EFRepository.DataAccess.Repositories
 
 		public void Save(IEnumerable<Notification> notifications)
 		{
-			_dbContext.Add(notifications);
+			_dbContext.Notifications.UpdateRange(notifications);
 
 			_dbContext.SaveChanges();
 		}

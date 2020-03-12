@@ -1,5 +1,6 @@
 ﻿using Common.Cqrs;
 using FlatOffersTracker.DataAccess;
+using System.Linq;
 
 namespace FlatOffersTracker.Cqrs.Commands
 {
@@ -10,6 +11,11 @@ namespace FlatOffersTracker.Cqrs.Commands
 	public class SetNotificationsAsSeenHandler : ISetNotificationsAsSeenHandler
 	{
 		private INotificationRepository _notificationRepository;
+
+		public SetNotificationsAsSeenHandler(INotificationRepository notificationRepository)
+		{
+			_notificationRepository = notificationRepository;
+		}
 
 		public void Execute(SetNotificationsAsSeenCommand command)
 		{

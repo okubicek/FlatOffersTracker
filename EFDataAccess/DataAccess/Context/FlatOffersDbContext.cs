@@ -14,6 +14,8 @@ namespace EFRepository.DataAccess.Context
 
 		public DbSet<FlatOffer> FlatOffers { get; set; }
 
+		public DbSet<Notification> Notifications { get; set; }
+
 		public DbSet<ExecutionRecord> Execution { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder builder)
