@@ -13,8 +13,8 @@ export class SearchPane extends Component {
                 roomCount: '',
                 maxPrice: '',
                 flatType: '',
-                startDate: new Date(),
-                endDate: new Date()
+                startDate: '',
+                endDate: ''
             },
             roomCountOptions: [],
             flatTypeOptions: []
