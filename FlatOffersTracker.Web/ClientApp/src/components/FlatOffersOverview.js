@@ -6,7 +6,7 @@ export class FlatOffersOverview extends Component {
         return (
             <div className="row">
                 {flatOffers.map(offer =>
-                    <div className="col col-sm-4">
+                    <div className="col-12 col-sm-6 col-md-4">
                         <FlatOfferCard flatOffer={offer} />
                     </div>
                 )}

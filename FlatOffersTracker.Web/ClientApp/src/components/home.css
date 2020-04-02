@@ -4,3 +4,10 @@
 header {
     background-color: #F8F7F3;
 }
+dt, dd {
+    display:block; 
+    float: left;
+}
+dt {
+    clear:both;
+}
