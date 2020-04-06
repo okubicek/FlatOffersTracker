@@ -15,7 +15,7 @@ export class FlatOffersOverview extends Component {
     }
 
     render() {
-        return this.props.loading
+        return this.props.loading && this.props.flatOffers.length == 0
             ? <p><em>Loading...</em></p>
             : this.renderFlatOffers(this.props.flatOffers);
     }
