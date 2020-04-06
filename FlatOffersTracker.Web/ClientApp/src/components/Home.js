@@ -65,7 +65,7 @@ export class Home extends Component {
             <React.Fragment>
                 <div className="container fluid">
                     <SlidePane label='Search'>
-                        <SearchPane handleSearch={this.handleSearch.bind(this)} />
+                        <SearchPane searchParams={this.state.searchParams} handleSearch={this.handleSearch.bind(this)} />
                     </SlidePane>
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}

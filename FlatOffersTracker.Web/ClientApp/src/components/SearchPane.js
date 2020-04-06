@@ -7,15 +7,19 @@ export class SearchPane extends Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            searchParams: {
+        var searchParams = props.searchParams != null
+            ? props.searchParams
+            : {
                 minFlatSize: '',
                 roomCount: '',
                 maxPrice: '',
                 flatType: '',
                 startDate: '',
                 endDate: ''
-            },
+            };
+
+        this.state = {
+            searchParams: searchParams,           
             roomCountOptions: [],
             flatTypeOptions: []
         };
