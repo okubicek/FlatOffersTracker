@@ -14,7 +14,9 @@ export class Home extends Component {
         this.state = {
             flatOffers: [], loading: false, pageSize: 18, pageNumber: 1, searchParams: null
         };
+    }
 
+    componentDidMount() {
         this.fetchFlatOffers();
     }
 
@@ -51,12 +53,15 @@ export class Home extends Component {
                 var offers = this.state.flatOffers.concat(data.results);
                 var isThereMorePagesToLoad = this.state.pageNumber < data.pageCount;
                 this.setState({
-                    flatOffers: offers, loading: false,
+                    flatOffers: offers,
+                    loading: false,
                     pageNumber: this.state.pageNumber,
                     isThereMorePagesToLoad: isThereMorePagesToLoad
                 })
             });
     }
+
+
 
     static displayName = Home.name;
 
