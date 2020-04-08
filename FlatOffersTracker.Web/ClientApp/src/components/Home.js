@@ -19,7 +19,7 @@ export class Home extends Component {
     }
 
     handleSearch(searchParams) {
-        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1, isLastPage: false },
+        this.setState({ searchParams: searchParams, flatOffers: [], pageNumber: 1, isThereMorePagesToLoad: true },
             () => this.fetchFlatOffers());
     }
 
@@ -49,11 +49,11 @@ export class Home extends Component {
             .then(response => response.json())
             .then(data => {
                 var offers = this.state.flatOffers.concat(data.results);
-                var isLastPage = this.state.pageNumber == data.pageCount;
+                var isThereMorePagesToLoad = this.state.pageNumber < data.pageCount;
                 this.setState({
                     flatOffers: offers, loading: false,
                     pageNumber: this.state.pageNumber,
-                    isLastPage: isLastPage
+                    isThereMorePagesToLoad: isThereMorePagesToLoad
                 })
             });
     }
@@ -69,15 +69,9 @@ export class Home extends Component {
                     </SlidePane>
                     <FlatOffersOverview
                         flatOffers={this.state.flatOffers}
-                        loading={this.state.loading} />
-                    <div className="row mt-4 text-center">
-                        <div className="col">
-                            {!this.state.isLastPage
-                                ? <button className="btn btn-primary" onClick={this.handleShowMore.bind(this)}>Show More</button>
-                                : null
-                            }
-                        </div>
-                    </div>
+                        loading={this.state.loading}
+                        isThereMorePagesToLoad={this.state.isThereMorePagesToLoad}
+                        handleShowMore={this.handleShowMore.bind(this)} />                    
                 </div>
             </React.Fragment>
         );
