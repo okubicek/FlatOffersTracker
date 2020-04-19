@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { FlatOfferCard } from './FlatOfferCard';
-import { PushSpinner } from "react-spinners-kit";
+import { Spinner } from "./Spinner";
 
 export class FlatOffersOverview extends Component {
     showMore() {        
@@ -20,7 +20,7 @@ export class FlatOffersOverview extends Component {
                 <div className="row mt-4 text-center">
                     <div className="col">
                         {this.props.isThereMorePagesToLoad
-                            ? <button className="btn btn-primary" onClick={this.showMore}>Show More</button>
+                            ? <button className="btn btn-primary" onClick={this.showMore.bind(this)}>Show More</button>
                             : null
                         }
                     </div>
@@ -33,7 +33,7 @@ export class FlatOffersOverview extends Component {
         return (
             <div className="row text-center">
                 <div className="col">
-                    <PushSpinner color="#ffffff" className="text-center" />
+                    <Spinner />
                 </div>
             </div>
         );
