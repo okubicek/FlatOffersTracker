@@ -49,7 +49,7 @@ namespace FlatOffersTrackerBackgroundApp
 					}));
 					container.Install(new FlatOffersTrackerInstaller());
 					container.Install(persistencyInstaller);
-
+					
 					GlobalConfiguration.Configuration.UseWindsorActivator(container.Kernel);
 					//JobActivator.Current = new WindsorJobActivator(container.Kernel);
 				})
@@ -81,7 +81,9 @@ namespace FlatOffersTrackerBackgroundApp
 								provider.GetRequiredService<SqlServerStorageOptions>()));
 
 				services.AddHostedService<RegisterHangfireJobsService>();
-				services.AddHangfireServer();
+				services.AddHangfireServer(options => {
+					options.WorkerCount = 1;
+				});
 			});
 		}
 
