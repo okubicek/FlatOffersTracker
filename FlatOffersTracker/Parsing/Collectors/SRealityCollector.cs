@@ -48,7 +48,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 			var url = _queryBuilder.GetQueryString(query);
 
 			using (var browser = SetupDriver())
-			{
+			{				
 				browser
 					.Navigate()
 					.GoToUrl(url);
@@ -71,9 +71,9 @@ namespace FlatOffersTracker.Parsing.Collectors
 				}).ToList();
 
 				_logger.Information("url {url} pulled {count} advertisements", url, advertisements.Count);
-
+				
 				return advertisements;
-			}
+			}			
 		}
 
 		private IEnumerable<string> ExtractImageUrls(IWebElement imagesWrapper)
@@ -104,7 +104,7 @@ namespace FlatOffersTracker.Parsing.Collectors
 			chromeOptions.AddArguments("headless");
 			var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-			return new ChromeDriver(path, chromeOptions);
+			return new ChromeDriver(path, chromeOptions, System.TimeSpan.FromSeconds(120));
 		}
 
 		private static void SetMaxNumberOfAdvertisementsPerSinglePage(ChromeDriver browser)
