@@ -1,6 +1,6 @@
-﻿using FlatOffersTracker.IntegrationTests.Helpers;
+﻿using FlatOffersTracker.IntegrationTests.BaseFixtures;
+using FlatOffersTracker.IntegrationTests.Helpers;
 using FlatOffersTracker.IntegrationTests.MarkNotificationsAsSeenTests.Fixtures;
-using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests;
 using System.Linq;
 using Xunit;
 using static FlatOffersTracker.IntegrationTests.MarkNotificationsAsSeenTests.WhenMarkingMultipleNotificationsAsViewed;

@@ -2,6 +2,7 @@
 using EFRepository.DataAccess.Context;
 using System.Linq;
 using Xunit;
+using FlatOffersTracker.IntegrationTests.BaseFixtures;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 {

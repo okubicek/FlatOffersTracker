@@ -2,6 +2,7 @@
 using Respawn;
 using System.Threading.Tasks;
 using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests.Factories;
+using FlatOffersTracker.IntegrationTests.BaseFixtures;
 
 namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
 {	

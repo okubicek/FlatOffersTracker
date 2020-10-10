@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests
+namespace FlatOffersTracker.IntegrationTests.BaseFixtures
 {
 	[CollectionDefinition(Definition)]
 	public class FlatOffersDbContextFixtureDefinition
