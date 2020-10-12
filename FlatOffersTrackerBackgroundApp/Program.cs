@@ -31,7 +31,7 @@ namespace FlatOffersTrackerBackgroundApp
 			await hostBuilder.Build().RunAsync();
 		}
 
-		public static IHostBuilder CreateWebHostBuilder(string[] args) // calling this WebHostBuilder so entity framework is able to create migraitons
+		public static IHostBuilder CreateWebHostBuilder(string[] args) // calling this WebHostBuilder so entity framework is able to create migrations
 		{
 			var persistencyInstaller = new EFCoreRepositoryInstaller();
 

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 
 namespace FlatOffersTracker.Web
@@ -29,7 +30,7 @@ namespace FlatOffersTracker.Web
 		{
 			Container.AddFacility<AspNetCoreFacility>(f => f.CrossWiresInto(services));
 
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+			services.AddMvc();
 
 			Container.AddScopedDdContext(Configuration.GetConnectionString("DefaultConnection"));
 			Container.Install(new EFCoreRepositoryInstaller());
@@ -39,7 +40,7 @@ namespace FlatOffersTracker.Web
 			services.AddSpaStaticFiles(configuration =>
 			{
 				configuration.RootPath = "ClientApp/build";
-			});			
+			});
 
 			return services.AddWindsor(Container, opts =>
 				opts.UseEntryAssembly(typeof(FlatOffersController).Assembly),
@@ -47,9 +48,9 @@ namespace FlatOffersTracker.Web
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 		{
-			if (env.IsDevelopment())
+			if (env.EnvironmentName == Environments.Development)
 			{
 				app.UseDeveloperExceptionPage();
 			}
@@ -59,23 +60,24 @@ namespace FlatOffersTracker.Web
 				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
 				app.UseHsts();
 			}
-
+			
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
+			app.UseRouting();
 
-			app.UseMvc(routes =>
+			app.UseEndpoints(routes =>
 			{
-				routes.MapRoute(
+				routes.MapControllerRoute(
 					name: "default",
-					template: "{controller}/{action=Index}/{id?}");
+					pattern: "{controller}/{action=Index}/{id?}");
 			});
 
 			app.UseSpa(spa =>
 			{
 				spa.Options.SourcePath = "ClientApp";
 
-				if (env.IsDevelopment())
+				if (env.EnvironmentName == Environments.Development)
 				{
 					spa.UseReactDevelopmentServer(npmScript: "start");
 				}
