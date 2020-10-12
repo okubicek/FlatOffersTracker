@@ -1,8 +1,8 @@
 ﻿using EFRepository.DataAccess.Context;
 using EFRepository.DataAccess.Repositories;
 using FlatOffersTracker.Cqrs.Commands;
+using FlatOffersTracker.IntegrationTests.BaseFixtures;
 using FlatOffersTracker.IntegrationTests.Helpers;
-using FlatOffersTracker.IntegrationTests.TrackOffersCommandHandlerTests;
 using System.Collections.Generic;
 
 namespace FlatOffersTracker.IntegrationTests.MarkNotificationsAsSeenTests.Fixtures

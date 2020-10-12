@@ -14,7 +14,7 @@ namespace FlatOffersTracker.Web.Controllers
         }
 
         [HttpPut("api/notification/mark-viewed")]
-        public IActionResult Update(int flatOfferId)
+        public IActionResult SetNotificationAsSeen(int flatOfferId)
         {
             _setNotifications.Execute(new SetNotificationsAsSeenCommand
             {
@@ -25,7 +25,7 @@ namespace FlatOffersTracker.Web.Controllers
         }
 
         [HttpPut("api/notifications/mark-viewed")]
-        public IActionResult Update([FromBody]IList<int> flatOfferIds)
+        public IActionResult SetNotificationsAsSeen([FromBody]IList<int> flatOfferIds)
         {
             _setNotifications.Execute(new SetNotificationsAsSeenCommand
             {
