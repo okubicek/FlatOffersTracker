@@ -61,7 +61,7 @@ namespace FlatOffersTrackerBackgroundApp.Jobs
 
 			return lastExecution == null ?
 				false :
-				HoursFromLastExecution(lastExecution) < 24;
+				HoursFromLastExecution(lastExecution) < 23;
 		}
 
 		private static int HoursFromLastExecution(ExecutionRecord lastExecution)
